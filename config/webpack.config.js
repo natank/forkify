@@ -56,7 +56,8 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: 'images/[name]-[hash:8].[ext]'
+              name: 'images/[name]-[hash:8].[ext]',
+              context: path.resolve(__dirname, './app/assets/')
             }
           }
         ]

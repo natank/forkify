@@ -64,10 +64,6 @@ module.exports = {
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: ['file-loader']
-      },
-      {
-        test: /\.pug$/,
-        use: ['pug-loader']
       }
     ]
   },
@@ -78,28 +74,7 @@ module.exports = {
     new CleanWebpackPlugin(),
 
     new HtmlWebpackPlugin({
-      template: './app/index.pug',
-      templateParameters: {
-        page: 'Home'
-      },
-      chunks: ['main'],
-      filename: 'index.html'
-    }),
-    new HtmlWebpackPlugin({
-      template: './app/logos.pug',
-      templateParameters: {
-        page: 'Logos'
-      },
-      chunks: ['main'],
-      filename: 'logos.html'
-    }),
-    new HtmlWebpackPlugin({
-      template: './app/gaming.pug',
-      templateParameters: {
-        page: 'Gaming'
-      },
-      chunks: ['main'],
-      filename: 'gaming.html'
+      template: './app/index.html'
     }),
     new BrowserSyncPlugin({
       // browse to http://localhost:3000/ during development,

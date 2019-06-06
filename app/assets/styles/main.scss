@@ -1,23 +1,6 @@
-// Vendors
-@import url('https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,400i|Nunito:300,300i');
-
-// import Materialize colors
-@import 'materialize-css/sass/components/_color-variables.scss';
-@import 'materialize-css/sass/components/_color-classes.scss';
-// Override Materialize variables
-@import './_variables';
-
-// Materialize Styles
-@import 'materialize-css/sass/materialize.scss';
-
 // mixins
 @import './_mixins';
 
 // Project files
-@import './_base';
-@import './_header';
-@import './_gallery';
-@import './_footer';
-@import './_modals';
-@import './reveal-item';
-@import './nav';
+@import './_style';
+

@@ -1,5 +1,5 @@
 {
-  "name": "Galappear",
+  "name": "Forkify",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,20 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/natank/Galappear.git"
+    "url": "git+https://github.com/natank/forkify.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/natank/Galappear/issues"
+    "url": "https://github.com/natank/forkify/issues"
   },
-  "homepage": "https://github.com/natank/Galappear#readme",
+  "homepage": "https://github.com/natank/forkify#readme",
   "devDependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.17",
-    "@fortawesome/free-brands-svg-icons": "^5.8.1",
-    "@fortawesome/free-regular-svg-icons": "^5.8.1",
-    "@fortawesome/free-solid-svg-icons": "^5.8.1",
     "browser-sync": "^2.26.3",
     "browser-sync-webpack-plugin": "^2.2.2",
     "browsersync": "0.0.1-security",
@@ -37,17 +33,11 @@
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-simple-vars": "^5.0.2",
-    "pug": "^2.0.3",
-    "pug-loader": "^2.4.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.1"
   },
-  "dependencies": {
-    "jquery": "^3.4.1",
-    "materialize-css": "^1.0.0",
-    "waypoints": "^4.0.1"
-  }
+  "dependencies": {}
 }

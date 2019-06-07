@@ -1,2 +1,4 @@
 import '../styles/main.scss';
-import './index';
+import num from './index';
+
+console.log(`Imported ${num} from index`);

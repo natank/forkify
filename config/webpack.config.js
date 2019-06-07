@@ -3,6 +3,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -51,7 +53,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|gif|png)$/,
+        test: /\.(jpg|gif|png|svg)$/,
         use: [
           {
             loader: 'file-loader',
@@ -65,6 +67,24 @@ module.exports = {
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: ['file-loader']
+      },
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      },
+      {
+        test: /\.pug$/,
+        use: ['pug-loader']
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader?classPrefix'
       }
     ]
   },
@@ -75,7 +95,7 @@ module.exports = {
     new CleanWebpackPlugin(),
 
     new HtmlWebpackPlugin({
-      template: './app/index.html'
+      template: './app/index.pug'
     }),
     new BrowserSyncPlugin({
       // browse to http://localhost:3000/ during development,
@@ -85,6 +105,11 @@ module.exports = {
       proxy: 'http://localhost:3100/',
       injectCss: true,
       reload: true
+    }),
+    new SVGSpritemapPlugin('app/img/svg/*.svg', {
+      output: {
+        filename: 'images/spritemap.svg'
+      }
     })
   ],
   output: {

@@ -2,19 +2,25 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
+
+const webpack = require('webpack');
+const hotMiddlewareScript =
+  'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
+
+
+
 
 module.exports = {
   mode: 'development',
   entry: {
-    main: './app/assets/scripts/main.js'
+    main: ['./app/assets/scripts/main.js', hotMiddlewareScript]
   },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     overlay: true,
-    port: 3100
+    hot: true,
+    injectHot: true
   },
   module: {
     rules: [
@@ -29,14 +35,8 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              sourceMap: true
-            }
-          },
+          'style-loader',
+          'css-loader',
           'postcss-loader',
           'sass-loader' // compiles Sass to CSS, using Node Sass by default
         ]
@@ -95,25 +95,18 @@ module.exports = {
     new CleanWebpackPlugin(),
 
     new HtmlWebpackPlugin({
-      template: './app/index.pug'
-    }),
-    new BrowserSyncPlugin({
-      // browse to http://localhost:3000/ during development,
-      // ./public directory is being served
-      host: 'localhost',
-      port: 3000,
-      proxy: 'http://localhost:3100/',
-      injectCss: true,
-      reload: true
+      template: 'app/index.pug'
     }),
     new SVGSpritemapPlugin('app/img/svg/*.svg', {
       output: {
         filename: 'images/spritemap.svg'
       }
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ],
   output: {
-    filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, '../dist')
+    filename: '[name].[hash].js',
+    path: path.resolve(__dirname, '../dist'),
+    publicPath:'/'
   }
 };

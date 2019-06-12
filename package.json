@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "webpack-dev-server --config=config/webpack.config.js",
-    "start:build": "webpack --config=config/webpack.config.js"
+    "start": "webpack-dev-server --open",
+    "server": "nodemon ./server/server.js",
+    "build": "webpack --config config/webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -22,18 +23,15 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "babel-loader": "^8.0.6",
-    "browser-sync": "^2.26.3",
-    "browser-sync-webpack-plugin": "^2.2.2",
     "browsersync": "0.0.1-security",
     "clean-webpack-plugin": "^2.0.1",
-    "copy-webpack-plugin": "^5.0.3",
     "css-loader": "^2.1.1",
     "extract-loader": "^3.1.0",
     "file-loader": "^3.0.1",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.6.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-simple-vars": "^5.0.2",
@@ -46,7 +44,11 @@
     "svg-spritemap-webpack-plugin": "^3.3.4",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.3.1"
+    "webpack-dev-middleware": "^3.7.0",
+    "webpack-dev-server": "^3.3.1",
+    "webpack-hot-middleware": "^2.25.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }

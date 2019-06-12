@@ -1,3 +1,3 @@
 // Global app controller
-var num = 23;
+var num = 2;
 module.exports = num;

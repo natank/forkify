@@ -8,13 +8,10 @@ const webpack = require('webpack');
 const hotMiddlewareScript =
   'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
 
-
-
-
 module.exports = {
   mode: 'development',
   entry: {
-    main: ['./app/assets/scripts/main.js', hotMiddlewareScript]
+    main: ['./app/main.js', hotMiddlewareScript]
   },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
@@ -23,12 +20,16 @@ module.exports = {
     injectHot: true
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
-          { loader: 'css-loader', options: { importLoaders: 1 } },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
           'postcss-loader'
         ]
       },
@@ -43,26 +44,23 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: {
-              attrs: ['img:src']
-            }
+        exclude: /\index.html$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            attrs: ['img:src']
           }
-        ]
+        }]
       },
       {
         test: /\.(jpg|gif|png|svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'images/[name]-[hash:8].[ext]',
-              context: path.resolve(__dirname, './app/assets/')
-            }
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: 'images/[name]-[hash:8].[ext]',
+            context: path.resolve(__dirname, './app/assets/')
           }
-        ]
+        }]
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -95,9 +93,9 @@ module.exports = {
     new CleanWebpackPlugin(),
 
     new HtmlWebpackPlugin({
-      template: 'app/index.pug'
+      template: 'app/view/index.pug'
     }),
-    new SVGSpritemapPlugin('app/img/svg/*.svg', {
+    new SVGSpritemapPlugin('app/view/img/svg/*.svg', {
       output: {
         filename: 'images/spritemap.svg'
       }
@@ -107,6 +105,6 @@ module.exports = {
   output: {
     filename: '[name].[hash].js',
     path: path.resolve(__dirname, '../dist'),
-    publicPath:'/'
+    publicPath: '/'
   }
 };

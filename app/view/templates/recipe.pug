@@ -1,6 +1,83 @@
-a.results__link.results__link--active(href='#23456')
-  figure.results__fig
-    img(src="#", alt='Test')
-  .results__data
-    h4.results__name Pasta with Tomato ...
-    p.results__author The Pioneer Woman 
+figure.recipe__fig
+    img(src="#", alt='Tomato')
+    h1.recipe__title
+        span Pasta with tomato cream sauce
+.recipe__details
+    .recipe__info
+        svg.recipe__info-icon
+            use(xlink:href="./images/spritemap.svg#sprite-stopwatch")
+        span.recipe__info-data.recipe__info-data--minutes 45
+        span.recipe__info-text  minutes
+    .recipe__info
+        svg.recipe__info-icon
+            use(xlink:href="./images/spritemap.svg#sprite-man")
+        span.recipe__info-data.recipe__info-data--people 4
+        span.recipe__info-text  servings
+        .recipe__info-buttons
+            button.btn-tiny
+                svg
+                    use(xlink:href="./images/spritemap.svg#sprite-circle-with-minus")
+            button.btn-tiny
+                svg
+                    use(xlink:href="./images/spritemap.svg#sprite-circle-with-plus")
+    button.recipe__love
+        svg.header__likes
+            use(xlink:href="./images/spritemap.svg#sprite-heart-outlined")
+.recipe__ingredients
+    ul.recipe__ingredient-list
+        li.recipe__item
+            svg.recipe__icon
+            use(xlink:href="./images/spritemap.svg#sprite-check")
+            .recipe__count 1000
+            .recipe__ingredient
+            span.recipe__unit g
+            |                             pasta
+        li.recipe__item
+            svg.recipe__icon
+            use(xlink:href="./images/spritemap.svg#sprite-check")
+            .recipe__count 1/2
+            .recipe__ingredient
+            span.recipe__unit cup
+            |                             ricotta cheese
+        li.recipe__item
+            svg.recipe__icon
+            use(xlink:href="./images/spritemap.svg#sprite-check")
+            .recipe__count 1
+            .recipe__ingredient
+            span.recipe__unit
+            |                             can of tomatoes, whole or crushed
+        li.recipe__item
+            svg.recipe__icon
+            use(xlink:href="./images/spritemap.svg#sprite-check")
+            .recipe__count 1
+            .recipe__ingredient
+            span.recipe__unit
+            |                             can tuna packed in olive oil
+        li.recipe__item
+            svg.recipe__icon
+            use(xlink:href="./images/spritemap.svg#sprite-check")
+            .recipe__count 1/2
+            .recipe__ingredient
+            span.recipe__unit cup
+            |                             grated parmesan cheese
+        li.recipe__item
+            svg.recipe__icon
+            use(xlink:href="./images/spritemap.svg#sprite-check")
+            .recipe__count 1/4
+            .recipe__ingredient
+            span.recipe__unit cup
+            |                             fresh basil, chopped or torn
+    button.btn-small.recipe__btn
+        svg.search__icon
+            use(xlink:href="./images/spritemap.svg#sprite-shopping-cart")
+        span Add to shopping list
+.recipe__directions
+    h2.heading-2 How to cook it
+    p.recipe__directions-text
+        | This recipe was carefully designed and tested by
+    span.recipe__by The Pioneer Woman
+        | . Please check out directions at their website.
+    a.btn-small.recipe__btn(href='http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/', target='_blank')
+        span Directions
+        svg.search__icon
+            use(xlink:href="./images/spritemap.svg#sprite-triangle-right")

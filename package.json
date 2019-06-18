@@ -50,6 +50,7 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0"
   }
 }

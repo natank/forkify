@@ -11,7 +11,7 @@ head
     img.header__logo(src=require('./img/logo.png'), alt='Logo')
     form.search
       input.search__field(type='text', placeholder='Search over 1,000,000 recipes...')
-      button.btn.search__btn
+      button.btn.search__btn(type='submit')
         svg.search__icon
           use(xlink:href="./images/spritemap.svg#sprite-magnifying-glass")
         span Search

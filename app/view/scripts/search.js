@@ -5,7 +5,6 @@ export default class Search {
   constructor(getRecipiesCb) {
     this.onSearch = this.onSearch.bind(this);
     DOMSearch.addEventListener('submit', this.onSearch);
-    this.test = 1;
     this.getRecipies = getRecipiesCb;
   }
   onSearch() {

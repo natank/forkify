@@ -25,12 +25,7 @@ app.get('/search', function (req, res) {
 
   const keyword = req.query.searchString.replace(/ /g, '%20');
   const URL = `https://www.food2fork.com/api/search?key=a3aa0083a984cf4447b5b313af270582&q=${keyword}&page=2`;
-  // let result = {
-  //   res: keyword,
-  //   hello: 'world'
-  // };
-  // res.send(result);
-
+ 
   console.log(`URL=${URL}`);
   fetch(URL)
     .then(result => {

@@ -15,4 +15,7 @@ export default class Results {
     this.node.appendChild(resultsList);
     this.node.innerHTML += pagination.node.innerHTML;
   }
+  render() {
+    
+  }
 }

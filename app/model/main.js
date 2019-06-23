@@ -7,10 +7,6 @@ export default class Model {
       .then(function (response) {
         return response.json()
       })
-      .then(function (data) {
-        let str = JSON.stringify(data);
-        alert(`got resultes1: ${str}`);
-      })
       .catch(function (error) {
         alert(error.message)
       });

@@ -1,6 +1,6 @@
 const DOMSearchField = document.querySelector('.search__field');
 const DOMSearch = document.querySelector('.search');
-import Results from './results';
+import ResultsRenderer from './resultsRenderer';
 
 export default class Search {
   constructor(getRecipiesCb) {
@@ -13,9 +13,11 @@ export default class Search {
     if (DOMSearchField.value) {
       this.getRecipies(DOMSearchField.value)
         .then(function (searchResults) {
-          let results = new Results(searchResults);
-          results.render();
+          this.resultsRenderer = new ResultsRenderer(searchResults);
         })
+        .catch(error => {
+          alert(`An error occured while rendering results ${error}`);
+        }) 
     }
   }
 }

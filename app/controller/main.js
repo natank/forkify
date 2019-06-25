@@ -1,6 +1,6 @@
 import '../view/scripts/main';
 import '../model/main';
-import Results from '../view/scripts/results';
+
 import Recipe from '../view/scripts/recipe';
 import Shopping from '../view/scripts/shopping';
 import Likes from '../view/scripts/likes';

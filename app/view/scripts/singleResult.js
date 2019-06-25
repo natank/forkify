@@ -8,7 +8,7 @@ This module is responsible for the functionality of the recipe section
 ***************************************************/
 import result from '../templates/result.pug';
 
-export default class Result {
+export default class SingleResult {
   constructor(data) {
     this.node = document.createElement('div');
     this.node.innerHTML = result();

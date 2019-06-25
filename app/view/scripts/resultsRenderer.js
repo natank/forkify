@@ -12,8 +12,8 @@ export default class ResultsRenderer {
     this.resultsPerPage = 10;
     
     this.numPages = this.results.recipes.length;
+    this.pagination = new Pagination(this.numPages, this.currentPage);
     
-    this.pagination = new Pagination();
     // Create the container of the result list
     this.node = document.createElement('div');
 

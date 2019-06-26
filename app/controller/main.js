@@ -1,7 +1,6 @@
 import '../view/scripts/main';
 import '../model/main';
 
-import Recipe from '../view/scripts/recipe';
 import Shopping from '../view/scripts/shopping';
 import Likes from '../view/scripts/likes';
 import Model from '../model/main';
@@ -14,14 +13,13 @@ const DOMShopping = document.querySelector('.shopping');
 const DOMLikes = document.querySelector('.likes__list');
 
 
-var recipe = new Recipe();
 var shopping = new Shopping();
 var likes = new Likes();
 
-DOMRecipe.innerHTML = recipe.node.innerHTML;
+// DOMRecipe.innerHTML = recipe.node.innerHTML;
 DOMShopping.innerHTML = shopping.node.innerHTML;
 DOMLikes.innerHTML = likes.node.innerHTML;
 
 
 let model = new Model();
-let search = new Search(model.getRecipies);
+let search = new Search(model.getRecipies, model.getRecipe);

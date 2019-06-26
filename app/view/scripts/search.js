@@ -3,9 +3,10 @@ const DOMSearch = document.querySelector('.search');
 import ResultsRenderer from './resultsRenderer';
 
 export default class Search {
-  constructor(getRecipiesCb) {
+  constructor(getRecipiesCb, getRecipeCb) {
     this.onSearch = this.onSearch.bind(this);
     this.getRecipies = getRecipiesCb;
+    this.getRecipe = getRecipeCb;
     DOMSearch.addEventListener('submit', this.onSearch);
   }
   onSearch(e) {
@@ -13,11 +14,11 @@ export default class Search {
     if (DOMSearchField.value) {
       this.getRecipies(DOMSearchField.value)
         .then((function (searchResults) {
-          this.resultsRenderer = new ResultsRenderer(searchResults);
+          this.resultsRenderer = new ResultsRenderer(searchResults, this.getRecipe);
         }).bind(this))
         .catch(error => {
-          alert(`An error occured while rendering results ${error}`);
-        }) 
+          alert(`An error occured while rendering results ${error.stack}`);
+        })
     }
   }
 }

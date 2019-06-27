@@ -21,10 +21,6 @@ export default class ResultsRenderer {
     this.node = document.createElement('div');
 
     this.render();
-
-    alert(err.stack)
-
-
   }
 
   render() {

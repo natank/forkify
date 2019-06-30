@@ -1,6 +1,9 @@
 import '../view/scripts/main';
-import '../model/main';
 
+import {
+  Search
+} from '../model/Search';
+/*
 import Shopping from '../view/scripts/shopping';
 import Likes from '../view/scripts/likes';
 import Model from '../model/main';
@@ -19,7 +22,7 @@ var likes = new Likes();
 // DOMRecipe.innerHTML = recipe.node.innerHTML;
 DOMShopping.innerHTML = shopping.node.innerHTML;
 DOMLikes.innerHTML = likes.node.innerHTML;
+*/
 
-
-let model = new Model();
-let search = new Search(model.getRecipies, model.getRecipe);
+let search = new Search('pizza');
+console.log(search);

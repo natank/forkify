@@ -86,6 +86,7 @@ export default class ResultsRenderer {
 
     // this.results.recipes.forEach(function(elem, index){
     for (let i = 0; i < this.resultsPerPage; i++) {
+
       // Get the index based on the current page
       let index = i + (this.currentPage - 1) * this.resultsPerPage;
       // Break the loop if index exceeds number of elements

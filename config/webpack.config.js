@@ -10,6 +10,7 @@ const hotMiddlewareScript =
 
 module.exports = {
   mode: 'development',
+  devtool: 'eval-source-map',
   entry: {
     main: ['./app/main.js', hotMiddlewareScript]
   },

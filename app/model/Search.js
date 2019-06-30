@@ -1,16 +1,23 @@
-export default class Model {
-  constructor() {}
-  getRecipies(searchString) {
-    let encodedURL = `https://www.food2fork.com/api/get? key=a3aa0083a984cf4447b5b313af270582&rId=35382`;
+export class Search {
+  constructor(query) {
+    this.query = query;
+  }
+  getResults(searchString) {
     let URL = `http://127.0.0.1:3000/search/?searchString=${searchString}`;
     return fetch(URL)
-      .then(function (response) {
+      .then(function (results) {
         return response.json()
+      })
+      .then(function (recipies) {
+        this.recipies = recipies;
       })
       .catch(function (error) {
         alert(error.message)
       });
   }
+}
+
+/*
   getRecipe(recipeId) {
     let URL = `http://127.0.0.1:3000/recipe/?recipeId=${recipeId}`;
 
@@ -23,3 +30,4 @@ export default class Model {
       })
   }
 }
+*/

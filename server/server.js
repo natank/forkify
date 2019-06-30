@@ -45,6 +45,7 @@ app.get('/recipe', function (req, res) {
       return result.json()
     })
     .then(data => {
+      console.log(data);
       res.send(data)
     })
     .catch(error => console.log(`unable to fetch data: ${error}`))

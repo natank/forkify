@@ -34,7 +34,7 @@ export class RecipeList {
     let DOMResultslist = document.createElement('ul');
     DOMResultslist.classList.add('results__list');
 
-    this.recipes.recipes.forEach(function (recipe) {
+    this.recipes.forEach(function (recipe) {
       // get the id
       const regex = /(?<=\/)\w*$/;
       const id = regex.exec(recipe.f2f_url);

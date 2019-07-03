@@ -28,10 +28,10 @@ function onSearch(event) {
     search.getResults()
       .then(() => {
         state.recipes = search.recipes;
-        state.currentPage = 1;
-        state.numPages = state.recipes.length / recipesPerPage;
-        let recipeList = new RecipeList(state.recipes);
-        recipeList.render();
+        state.currentPage = 1;                        
+        state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
+        state.recipeList = new RecipeList(state.recipes.slice(state.currentPage*(recipesPerPage-1, recipesPerPage)));
+        state.recipeList.render();
       })
       .then(() => {
         let props = {
@@ -61,4 +61,15 @@ function onRecipe(event) {
 
     });
 
+}
+
+function onPagination(event){
+  if(event.target.classList.includes('results__btn--prev')) {
+    if(state.currentPage > 1 && state.currentPage < state.numPages) {
+      state.currentPage++;
+      state.recipeList.render();
+    }
+  } else if (event.target.classList.includes('results__btn--next')) {
+    
+  }
 }

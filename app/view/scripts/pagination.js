@@ -9,7 +9,7 @@ export class Pagination {
     }
     render() {
         let isLeft = (this.currentPage > 1)
-        let isRight = (this.currPage < this.numPages)
+        let isRight = (this.currentPage < this.numPages)
         let paginationHTML =
             `<div class="results__pages">
                 ${ isLeft ?

@@ -1,28 +1,64 @@
 import '../view/scripts/main';
 
 import {
+  RecipeList
+} from '../view/scripts/RecipeList';
+
+import {
+  domElements
+} from '../view/scripts/elements';
+
+import {
   Search
 } from '../model/Search';
-/*
-import Shopping from '../view/scripts/shopping';
-import Likes from '../view/scripts/likes';
-import Model from '../model/main';
-import Search from '../view/scripts/search';
+import {
+  Pagination
+} from '../view/scripts/pagination';
 
-const DOMContainer = document.querySelector('.container');
-const DOMResults = document.querySelector('.results');
-const DOMRecipe = document.querySelector(".recipe");
-const DOMShopping = document.querySelector('.shopping');
-const DOMLikes = document.querySelector('.likes__list');
+var state = {};
+const recipesPerPage = 10;
 
 
-var shopping = new Shopping();
-var likes = new Likes();
+domElements.search.addEventListener('submit', onSearch);
 
-// DOMRecipe.innerHTML = recipe.node.innerHTML;
-DOMShopping.innerHTML = shopping.node.innerHTML;
-DOMLikes.innerHTML = likes.node.innerHTML;
-*/
+function onSearch(event) {
+  event.preventDefault();
+  try {
+    var search = new Search('pizza');
+    search.getResults()
+      .then(() => {
+        state.recipes = search.recipes;
+        state.currentPage = 1;
+        state.numPages = state.recipes.length / recipesPerPage;
+        let recipeList = new RecipeList(state.recipes);
+        recipeList.render();
+      })
+      .then(() => {
+        let props = {
+          currentPage: state.currentPage,
+          numPages: state.numPages
+        };
+        let pagination = new Pagination(props);
+        pagination.render();
 
-let search = new Search('pizza');
-console.log(search);
+        let recipes = document.querySelectorAll('.results__link')
+        recipes.forEach((recipe) => {
+          recipe.addEventListener('click', onRecipe)
+        })
+      });
+  } catch (error) {
+    console.log(`error getting search results: ${error}`);
+  }
+
+
+}
+
+function onRecipe(event) {
+  const hash = window.location.hash;
+  const recipeModel = new RecipeModel(hash);
+  recipeModel.getData()
+    .then((data) => {
+
+    });
+
+}

@@ -2,18 +2,20 @@ export class Search {
   constructor(query) {
     this.query = query;
   }
-  getResults(searchString) {
-    let URL = `http://127.0.0.1:3000/search/?searchString=${searchString}`;
-    return fetch(URL)
-      .then(function (results) {
-        return response.json()
-      })
-      .then(function (recipies) {
-        this.recipies = recipies;
-      })
-      .catch(function (error) {
-        alert(error.message)
-      });
+  getResults() {
+    if (this.query) {
+      let URL = `http://127.0.0.1:3000/search/?searchString=${this.query}`;
+      return fetch(URL)
+        .then(function (response) {
+          return response.json()
+        })
+        .then((function (recipes) {
+          this.recipes = recipes;
+        }).bind(this))
+        .catch(function (error) {
+          alert(error.message)
+        });
+    }
   }
 }
 

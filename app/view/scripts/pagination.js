@@ -1,28 +1,32 @@
-import pagination from '../templates/pagination.pug';
+import {
+    domElements
+} from './elements';
 
-export default class Pagination {
-    constructor(numPages, currPage) {
-        this.node = document.createElement('div');
-        this.node.innerHTML = pagination();
-        if (currPage === 1) {
-            this.node.querySelector('.results__btn--prev').style.display = "none";
-            this.node.querySelector('.results__btn--next').style.display = "block";
-
-            this.node.querySelector('.results__btn--prev span').innerText = "";
-            this.node.querySelector('.results__btn--next span').innerText = `Page ${currPage+1}`;
-
-        } else if (currPage === numPages) {
-            this.node.querySelector('.results__btn--prev').style.display = "block";
-            this.node.querySelector('.results__btn--next').style.display = "none";
-
-            this.node.querySelector('.results__btn--prev span').innerText = `Page ${currPage-1}`;
-            this.node.querySelector('.results__btn--next span').innerText = '';
-        } else {
-            this.node.querySelector('.results__btn--prev').style.display = "block";
-            this.node.querySelector('.results__btn--next').style.display = "block";
-
-            this.node.querySelector('.results__btn--prev span').innerText = `Page ${currPage-1}`;
-            this.node.querySelector('.results__btn--next span').innerText = `Page ${currPage+1}`;
-        }
+export class Pagination {
+    constructor(props) {
+        this.numPages = props.numPages;
+        this.currentPage = props.currentPage;
+    }
+    render() {
+        let isLeft = (this.currentPage > 1)
+        let isRight = (this.currPage < this.numPages)
+        let paginationHTML =
+            `<div class="results__pages">
+                ${ isLeft ?
+                    `<button class="btn-inline results__btn--prev"> 
+                    <svg class="search__icon"> 
+                        <use xlink:href="./images/spritemap.svg#sprite-triangle-left"></use> 
+                    </svg><span>Page ${this.currentPage-1}</span> 
+                    </button>`:''
+                }
+                ${ isRight ?
+                `<button class="btn-inline results__btn--next"><span>${this.currentPage+1}</span> 
+                <svg class="search__icon"> 
+                    <use xlink:href="./images/spritemap.svg#sprite-triangle-right"></use> 
+                </svg>
+                </button>`:''
+                }
+            </div>`
+        domElements.results.innerHTML += paginationHTML;
     }
 }

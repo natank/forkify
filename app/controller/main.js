@@ -1,6 +1,14 @@
 import '../view/scripts/main';
 
 import {
+  RecipeModel
+} from '../model/Recipe'
+
+import {
+  RecipeView
+} from '../view/scripts/Recipe'
+
+import {
   RecipeList
 } from '../view/scripts/RecipeList';
 
@@ -11,6 +19,7 @@ import {
 import {
   Search
 } from '../model/Search';
+
 import {
   Pagination
 } from '../view/scripts/pagination';
@@ -42,9 +51,14 @@ function onSearch(event) {
 
 
 function onRecipe(event) {
+  event.preventDefault();
   const hash = window.location.hash;
-  const recipeModel = new RecipeModel(hash);
-  recipeModel.getData().then(data => {});
+  state.recipe.Model = new RecipeModel(hash);
+  state.recipe.Model.getData()
+    .then(data => {
+      state.recipe.Model.data = data;
+      controlRecipe();
+    });
 }
 
 function onPagination(event) {
@@ -75,9 +89,8 @@ function controlRecipeList() {
 
   state.recipeList.render();
 
-  let recipes = document.querySelectorAll('.results__link');
-  recipes.forEach(recipe => {
-    recipe.addEventListener('click', onRecipe);
+  domElements.getResults().forEach(recipe => {
+    recipe.addEventListener('click', onRecipe, false);
   });
 }
 
@@ -92,5 +105,19 @@ function controlPagination() {
   domElements.getPaginationBtns().forEach((btn) => {
     btn.addEventListener('click', onPagination);
   });
+}
+
+function controlRecipe() {
+  let data = state.recipe.Model.data;
+  let props = {
+    recipeId: data.id,
+    imgUrl: data.image_url,
+    title: data.title,
+    ingredients: data.ingredients,
+    sourceUrl: data.source_url,
+    publisher: data.publisher
+  }
+  state.recipeView = new RecipeView(props);
+  state.recipeView.render();
 
 }

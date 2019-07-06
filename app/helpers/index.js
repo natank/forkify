@@ -33,3 +33,7 @@ export default {
         return firstTextNode;
     }
 }
+
+export function stopEvent(ev) {
+    ev.stopPropagation();
+}

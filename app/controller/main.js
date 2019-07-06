@@ -20,6 +20,7 @@ const recipesPerPage = 10;
 
 domElements.search.addEventListener('submit', onSearch);
 
+// Event handlers
 function onSearch(event) {
   event.preventDefault();
   try {
@@ -30,30 +31,15 @@ function onSearch(event) {
         state.recipes = search.recipes;
         state.currentPage = 1;
         state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
-        state.recipeList = new RecipeList(
-          state.recipes.recipes.slice(
-            (state.currentPage - 1) * recipesPerPage, recipesPerPage)
-        )
 
-        state.recipeList.render();
+        controlRecipeList();
+        controlPagination();
       })
-      .then(() => {
-        let props = {
-          currentPage: state.currentPage,
-          numPages: state.numPages
-        };
-        let pagination = new Pagination(props);
-        pagination.render();
-
-        let recipes = document.querySelectorAll('.results__link');
-        recipes.forEach(recipe => {
-          recipe.addEventListener('click', onRecipe);
-        });
-      });
   } catch (error) {
     console.log(`error getting search results: ${error}`);
   }
 }
+
 
 function onRecipe(event) {
   const hash = window.location.hash;
@@ -62,10 +48,49 @@ function onRecipe(event) {
 }
 
 function onPagination(event) {
-  if (event.target.classList.includes('results__btn--prev')) {
-    if (state.currentPage > 1 && state.currentPage < state.numPages) {
-      state.currentPage++;
-      state.recipeList.render();
+  let btn = event.target.closest('.btn-inline');
+
+  if (btn.classList.contains('results__btn--prev')) {
+    if (state.currentPage > 1) {
+      state.currentPage--;
+      controlRecipeList();
+      controlPagination();
     }
-  } else if (event.target.classList.includes('results__btn--next')) {}
+  } else if (btn.classList.contains('results__btn--next')) {
+    if (state.currentPage < state.numPages) {
+      state.currentPage++;
+      controlRecipeList();
+      controlPagination();
+    }
+  }
+}
+
+// Control the status of the recipe list
+function controlRecipeList() {
+  let pageStartIndex = (state.currentPage - 1) * recipesPerPage;
+  state.recipeList = new RecipeList(
+    state.recipes.recipes.slice(
+      pageStartIndex, pageStartIndex + recipesPerPage)
+  );
+
+  state.recipeList.render();
+
+  let recipes = document.querySelectorAll('.results__link');
+  recipes.forEach(recipe => {
+    recipe.addEventListener('click', onRecipe);
+  });
+}
+
+// Control the status of the pagination area
+function controlPagination() {
+  let props = {
+    currentPage: state.currentPage,
+    numPages: state.numPages
+  };
+  let pagination = new Pagination(props);
+  pagination.render();
+  domElements.getPaginationBtns().forEach((btn) => {
+    btn.addEventListener('click', onPagination);
+  });
+
 }

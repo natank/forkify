@@ -27,6 +27,11 @@ export class Pagination {
                 </button>`:''
                 }
             </div>`
+        let oldPagination = domElements.results.querySelector('.results__pages');
+        if (oldPagination) {
+            domElements.results.removeChild(oldPagination);
+        }
         domElements.results.innerHTML += paginationHTML;
+
     }
 }

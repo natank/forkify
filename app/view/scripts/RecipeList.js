@@ -26,6 +26,10 @@ Request: https://www.food2fork.com/api/search?key={API_KEY}&q=shredded%20chicken
 "page":1}]
 }
 */
+
+import {
+  domElements
+} from './elements'
 export class RecipeList {
   constructor(recipes) {
     this.recipes = recipes;
@@ -56,7 +60,8 @@ export class RecipeList {
     })
     // add the list to the DOM.
     const DOMResults = document.querySelector('.results');
-    DOMResults.appendChild(DOMResultslist);
+    domElements.results.innerHTML = '';
+    domElements.results.appendChild(DOMResultslist);
   }
 }
 
@@ -144,7 +149,6 @@ export default class ResultsRenderer {
 
     //loop over search results
 
-    // this.results.recipes.forEach(function(elem, index){
     for (let i = 0; i < this.resultsPerPage; i++) {
 
       // Get the index based on the current page

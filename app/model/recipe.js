@@ -2,7 +2,7 @@ export class RecipeModel {
   constructor(id) {
     this.id = id;
   }
-  getResults() {
+  getData() {
     let URL = `http://127.0.0.1:3000/recipe/?recipeId=${this.id}`;
 
     return fetch(URL)

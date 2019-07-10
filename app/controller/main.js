@@ -2,7 +2,7 @@ import '../view/scripts/main';
 
 import {
   RecipeModel
-} from '../model/Recipe'
+} from '../model/recipe'
 
 import {
   RecipeView
@@ -29,6 +29,8 @@ const recipesPerPage = 10;
 
 domElements.search.addEventListener('submit', onSearch);
 
+window.onhashchange = 
+
 // Event handlers
 function onSearch(event) {
   event.preventDefault();
@@ -50,7 +52,7 @@ function onSearch(event) {
 }
 
 
-function onRecipe(event) {
+function hashHandler(event) {
   event.preventDefault();
   const hash = window.location.hash;
   state.recipe.Model = new RecipeModel(hash);
@@ -88,10 +90,6 @@ function controlRecipeList() {
   );
 
   state.recipeList.render();
-
-  domElements.getResults().forEach(recipe => {
-    recipe.addEventListener('click', onRecipe, false);
-  });
 }
 
 // Control the status of the pagination area

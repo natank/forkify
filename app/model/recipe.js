@@ -2,8 +2,8 @@ export class RecipeModel {
   constructor(id) {
     this.id = id;
   }
-  getData() {
-    let URL = `http://127.0.0.1:3000/recipe/?recipeId=${this.id}`;
+  static getRecipe(id) {
+    let URL = `http://127.0.0.1:3000/recipe/?recipeId=${id}`;
 
     return fetch(URL)
       .then(function (response) {

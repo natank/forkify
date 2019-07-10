@@ -29,7 +29,7 @@ const recipesPerPage = 10;
 
 domElements.search.addEventListener('submit', onSearch);
 
-window.onhashchange = 
+window.onhashchange = hashHandler;
 
 // Event handlers
 function onSearch(event) {
@@ -53,12 +53,12 @@ function onSearch(event) {
 
 
 function hashHandler(event) {
-  event.preventDefault();
   const hash = window.location.hash;
-  state.recipe.Model = new RecipeModel(hash);
-  state.recipe.Model.getData()
+  state.recipe = {};
+  window.location.hash = ' ';
+  RecipeModel.getRecipe(id)
     .then(data => {
-      state.recipe.Model.data = data;
+      state.recipe = data;
       controlRecipe();
     });
 }

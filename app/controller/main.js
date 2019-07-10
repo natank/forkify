@@ -55,12 +55,15 @@ function onSearch(event) {
 function hashHandler(event) {
   const hash = window.location.hash;
   state.recipe = {};
-  window.location.hash = ' ';
-  RecipeModel.getRecipe(id)
+
+  RecipeModel.getRecipe(hash)
     .then(data => {
       state.recipe = data;
       controlRecipe();
+      window.location.hash = ' ';
     });
+
+
 }
 
 function onPagination(event) {
@@ -106,9 +109,8 @@ function controlPagination() {
 }
 
 function controlRecipe() {
-  let data = state.recipe.Model.data;
+  let data = state.recipe;
   let props = {
-    recipeId: data.id,
     imgUrl: data.image_url,
     title: data.title,
     ingredients: data.ingredients,

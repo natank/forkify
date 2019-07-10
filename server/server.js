@@ -40,12 +40,14 @@ app.get('/search', function (req, res) {
 
 app.get('/recipe', function (req, res) {
   const recipeId = req.query.recipeId;
-  fetch(`https://www.food2fork.com/api/get?key=a3aa0083a984cf4447b5b313af270582&rId=${recipeId}`)
+  const URL = `https://www.food2fork.com/api/get?key=a3aa0083a984cf4447b5b313af270582&rId=${recipeId}`;
+  console.log(`url: ${URL}`);
+  fetch(URL)
     .then(result => {
       return result.json()
     })
     .then(data => {
-      console.log(data);
+      console.log(`data: ${JSON.stringify(data)}`);
       res.send(data)
     })
     .catch(error => console.log(`unable to fetch data: ${error}`))

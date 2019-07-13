@@ -426,6 +426,12 @@ body {
   position: relative;
   transform: scale(1.04) translateY(-1px);
   transform-origin: top;
+  text-align: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%
+  }
 }
 
 .recipe__fig::before {

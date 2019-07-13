@@ -53,17 +53,17 @@ function onSearch(event) {
 
 
 function hashHandler(event) {
-  const hash = window.location.hash;
-  state.recipe = {};
+  const hash = window.location.hash.substr(1);
+  if (hash != '') {
+    state.recipe = {};
 
-  RecipeModel.getRecipe(hash)
-    .then(data => {
-      state.recipe = data;
-      controlRecipe();
-      window.location.hash = ' ';
-    });
-
-
+    RecipeModel.getRecipe(hash)
+      .then(data => {
+        state.recipe = data.recipe;
+        controlRecipe();
+      });
+  }
+  window.location.hash = '';
 }
 
 function onPagination(event) {

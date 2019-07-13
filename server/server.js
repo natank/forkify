@@ -7,7 +7,7 @@ const app = express();
 const config = require('../config/webpack.config.js');
 const compiler = webpack(config);
 
-app.use(express.static('../dist'))
+app.use(express.static('../dist'));
 
 app.use(
   webpackDevMiddleware(compiler, {
@@ -20,7 +20,6 @@ app.use(require('webpack-hot-middleware')(compiler));
 app.listen(3000, () => console.log('Example app listening on port 3000'));
 
 app.get('/search', function (req, res) {
-
   // https://www.food2fork.com/api/search?key=YOUR_API_KEY&q=chicken%20breast&page=2
 
   const keyword = req.query.searchString.replace(/ /g, '%20');
@@ -29,26 +28,28 @@ app.get('/search', function (req, res) {
   console.log(`URL=${URL}`);
   fetch(URL)
     .then(result => {
-      return result.json()
+      return result.json();
     })
     .then(data => {
       console.log(data);
-      res.send(data)
+      res.send(data);
     })
     .catch(error => console.log(error));
 });
 
 app.get('/recipe', function (req, res) {
   const recipeId = req.query.recipeId;
+  console.log(`req.query: ${JSON.stringify(req.query)}`);
   const URL = `https://www.food2fork.com/api/get?key=a3aa0083a984cf4447b5b313af270582&rId=${recipeId}`;
+  console.log(`req.url: ${req.url}`);
   console.log(`url: ${URL}`);
   fetch(URL)
     .then(result => {
-      return result.json()
+      return result.json();
     })
     .then(data => {
       console.log(`data: ${JSON.stringify(data)}`);
-      res.send(data)
+      res.send(data);
     })
-    .catch(error => console.log(`unable to fetch data: ${error}`))
-})
+    .catch(error => console.log(`unable to fetch data: ${error}`));
+});

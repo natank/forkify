@@ -2,11 +2,11 @@ import '../view/scripts/main';
 
 import {
   RecipeModel
-} from '../model/recipe'
+} from '../model/recipe';
 
 import {
   RecipeView
-} from '../view/scripts/Recipe'
+} from '../view/scripts/Recipe';
 
 import {
   RecipeList
@@ -36,34 +36,41 @@ function onSearch(event) {
   event.preventDefault();
   try {
     var search = new Search('pizza');
-    search
-      .getResults()
-      .then(() => {
-        state.recipes = search.recipes;
-        state.currentPage = 1;
-        state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
+    search.getResults().then(() => {
+      state.recipes = search.recipes;
+      state.currentPage = 1;
+      state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
 
-        controlRecipeList();
-        controlPagination();
-      })
+      controlRecipeList();
+      controlPagination();
+    });
   } catch (error) {
     console.log(`error getting search results: ${error}`);
   }
 }
 
-
 function hashHandler(event) {
   const hash = window.location.hash.substr(1);
   if (hash != '') {
-    state.recipe = {};
+    state.recipe = new RecipeModel();
 
-    RecipeModel.getRecipe(hash)
-      .then(data => {
-        state.recipe = data.recipe;
-        controlRecipe();
-      });
+    state.recipe.getRecipe(hash).then(data => {
+      controlRecipe();
+    });
   }
   window.location.hash = '';
+}
+
+function onAddServings(event) {
+  let add = true;
+  state.recipe.updateServings(add);
+  controlRecipeIngredients();
+}
+
+function onSubstractServings(event) {
+  let substract = false;
+  state.recipe.updateServings(substract);
+  controlRecipeIngredients();
 }
 
 function onPagination(event) {
@@ -88,8 +95,7 @@ function onPagination(event) {
 function controlRecipeList() {
   let pageStartIndex = (state.currentPage - 1) * recipesPerPage;
   state.recipeList = new RecipeList(
-    state.recipes.recipes.slice(
-      pageStartIndex, pageStartIndex + recipesPerPage)
+    state.recipes.recipes.slice(pageStartIndex, pageStartIndex + recipesPerPage)
   );
 
   state.recipeList.render();
@@ -103,21 +109,34 @@ function controlPagination() {
   };
   let pagination = new Pagination(props);
   pagination.render();
-  domElements.getPaginationBtns().forEach((btn) => {
+  domElements.getPaginationBtns().forEach(btn => {
     btn.addEventListener('click', onPagination);
   });
 }
 
 function controlRecipe() {
-  let data = state.recipe;
+  let data = state.recipe.data.recipe;
   let props = {
     imgUrl: data.image_url,
     title: data.title,
     ingredients: data.ingredients,
     sourceUrl: data.source_url,
-    publisher: data.publisher
-  }
+    publisher: data.publisher,
+    servings: data.servings
+  };
   state.recipeView = new RecipeView(props);
   state.recipeView.render();
+  attachRecipeEventListeners();
+}
 
+function controlRecipeIngredients() {
+  state.recipeView.updateIngredients(state.recipe.data);
+  attachRecipeEventListeners();
+}
+
+function attachRecipeEventListeners() {
+  domElements
+    .getInfoButtons()[0]
+    .addEventListener('click', onSubstractServings);
+  domElements.getInfoButtons()[1].addEventListener('click', onAddServings);
 }

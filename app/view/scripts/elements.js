@@ -9,7 +9,8 @@ let domElements = {
     ...document.querySelector('.recipe__info-buttons').children
   ],
   getRecipeDetails: () => document.querySelector('.recipe__details'),
-  getRecipeIngredients: () => document.querySelector('.recipe__ingredients')
+  getRecipeIngredients: () => document.querySelector('.recipe__ingredients'),
+  getRecipeLove: () => document.querySelector('.recipe__love')
 };
 
 export {

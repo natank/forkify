@@ -23,7 +23,10 @@ export class RecipeView {
     renderIngredients.bind(this)();
   }
 
-
+  updateLove(isLove) {
+    this.props.love = isLove;
+    updateLoveButton();
+  }
 }
 
 function renderFigure() {
@@ -71,9 +74,7 @@ function renderDetails() {
   } else {
     domElements.recipe.innerHTML += markup;
   }
-
-
-
+  updateLoveButton();
 }
 
 function renderIngredients() {

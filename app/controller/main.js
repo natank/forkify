@@ -24,11 +24,18 @@ import {
   Pagination
 } from '../view/scripts/pagination';
 
-var state = {};
+
+// Global Veriables
+var state = {
+  recipes: {},
+  recipe: {},
+  currentPage: 1,
+  numPages: 1
+};
 const recipesPerPage = 10;
 
+// Attanging global Event handlers
 domElements.search.addEventListener('submit', onSearch);
-
 window.onhashchange = hashHandler;
 
 // Event handlers
@@ -71,6 +78,10 @@ function onSubstractServings(event) {
   let substract = false;
   state.recipe.updateServings(substract);
   controlRecipeIngredients();
+}
+
+function onLove(event){
+
 }
 
 function onPagination(event) {

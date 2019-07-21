@@ -61,7 +61,7 @@ function hashHandler(event) {
   if (hash != '') {
     state.recipe = new RecipeModel();
 
-    state.recipe.getRecipe(hash).then(data => {
+    state.recipe.getRecipe(hash).then(() => {
       controlRecipe();
     });
   }
@@ -147,7 +147,7 @@ function controlRecipeIngredients() {
 function controlLove() {
   state.recipe
     .toggleLove()
-    .then(isLove => recipeView.updateLove(isLove))
+    .then(() => state.recipeView.updateLove(state.recipe.data.recipe.isLove))
     .catch(err => alert(err));
 }
 

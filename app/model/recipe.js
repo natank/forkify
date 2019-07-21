@@ -1,5 +1,6 @@
 import {
-  reject
+  reject,
+  promised
 } from 'q';
 
 export class RecipeModel {
@@ -38,32 +39,26 @@ export class RecipeModel {
           '5-8 basil leaves'
         ],
         source_url: 'http://www.thevintagemixer.com/2013/03/cauliflower-pizza-crust-recipe/',
-        recipe_id: '7cad96',
+        recipe_id: id,
         image_url: 'http://static.food2fork.com/CauliflowerPizzaCrustRecipe06fdc.jpg',
         social_rank: 99.99880589962325,
         publisher_url: 'http://www.thevintagemixer.com/',
-        title: 'Cauliflower Pizza Crust Recipe',
+        title: 'Cauliflower Pizza Crust Recipe'
       }
     };
-    let ingredients = parseIngredients(
-      this.data.recipe.ingredients
-    );
+    let ingredients = parseIngredients(this.data.recipe.ingredients);
     let servings = 4; // the default servings
 
     // find if the recipe is loved
-    let lovedRecipes = localStorage.getItem('lovedRecipes');
-    let isLove = false;
-    if (lovedRecipes != null) {
-      isLove = lovedRecipes.find(element => element === 'id');
-    }
 
+    let isLove = localStorage.getItem(this.data.recipe.recipe_id) != null;
 
     let obj = {
       ingredients: ingredients,
       servings: servings,
-      id: id,
-      isLove: isLove,
-    }
+      id: this.data.recipe.recipe_id,
+      isLove: isLove
+    };
 
     this.data.recipe = {
       ...this.data.recipe,
@@ -72,7 +67,7 @@ export class RecipeModel {
 
     let p = new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(this.data);
+        resolve();
       }, 300);
     });
     return p;
@@ -182,30 +177,20 @@ export class RecipeModel {
     return this.data.recipe;
   }
   toggleLove() {
-    let lovedRecipes = localStorage.getItem('lovedRecipes');
-    let isLove = false;
     let id = this.data.recipe.recipe_id;
+    let isLove = localStorage.getItem(id) != null;
 
+    // 1 - Recipe is liked - so unlike it - remove id from local storage
+    if (isLove) localStorage.removeItem(id);
+    // 2- Recipe is unliked - like it - add the id to local storage
+    else localStorage.setItem(id, "");
 
-    if (lovedRecipes != null) {
-      // 1- loveArray exist. check if the recipe is liked
-      let foundId = lovedRecipes.find(element => element === id);
-      if (foundId != null) {
-        // 2 - The recipe is liked - change it to unlike
-        // remove the recipe id from lovedRecipes
-        lovedRecipes = lovedRecipes.filter(currId => currId != id)
-        isLove = false;
-      } else {
-        // 3 - The recipe is not liked - change it to like
-        // push the recipe id to the lovedRecipes
-        lovedRecipes.push(id);
-        isLove = true
-      }
-    } else {
-      // 4 - lovedRecipes does not exist. 
-      localStorage.setItem('lovedReipes', [id]);
-      isLove = true;
-    }
-    return isLove;
+    this.data.recipe.isLove = localStorage.getItem(id) != null;
+    let p = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+    return p;
   }
 }

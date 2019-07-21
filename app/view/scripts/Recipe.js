@@ -29,9 +29,19 @@ export class RecipeView {
   }
 }
 
+
+function updateLoveButton() {
+  let domLove = domElements.getRecipeLove();
+  if (this.props.isLove) {
+    domElements.getRecipeLove().classList.remove('background-image--none');
+  } else {
+    domElements.getRecipeLove().classList.add('background-image--none');
+  }
+}
+
 function renderFigure() {
   domElements.recipe.innerHTML += `<figure class="recipe__fig"><img src=${
-    this.props.imgUrl
+    this.props.image_url
   } alt="this.props.title"/>
   <h1 class="recipe__title"><span>${this.props.title}</span></h1>
 </figure>`;
@@ -74,6 +84,7 @@ function renderDetails() {
   } else {
     domElements.recipe.innerHTML += markup;
   }
+  updateLoveButton = updateLoveButton.bind(this);
   updateLoveButton();
 }
 

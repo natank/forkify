@@ -19,7 +19,7 @@ export class RecipeModel {
       });
   }
 
-  getRecipe() {
+  getRecipe(id) {
     this.data = {
       recipe: {
         publisher: 'Vintage Mixer',
@@ -42,13 +42,33 @@ export class RecipeModel {
         image_url: 'http://static.food2fork.com/CauliflowerPizzaCrustRecipe06fdc.jpg',
         social_rank: 99.99880589962325,
         publisher_url: 'http://www.thevintagemixer.com/',
-        title: 'Cauliflower Pizza Crust Recipe'
+        title: 'Cauliflower Pizza Crust Recipe',
       }
     };
-    this.data.recipe.ingredients = parseIngredients(
+    let ingredients = parseIngredients(
       this.data.recipe.ingredients
     );
-    this.data.recipe.servings = 4; // the default servings
+    let servings = 4; // the default servings
+
+    // find if the recipe is loved
+    let lovedRecipes = localStorage.getItem('lovedRecipes');
+    let isLove = false;
+    if (lovedRecipes != null) {
+      isLove = lovedRecipes.find(element => element === 'id');
+    }
+
+
+    let obj = {
+      ingredients: ingredients,
+      servings: servings,
+      id: id,
+      isLove: isLove,
+    }
+
+    this.data.recipe = {
+      ...this.data.recipe,
+      ...obj
+    };
 
     let p = new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -160,5 +180,32 @@ export class RecipeModel {
 
     this.data.recipe.servings = newServings;
     return this.data.recipe;
+  }
+  toggleLove() {
+    let lovedRecipes = localStorage.getItem('lovedRecipes');
+    let isLove = false;
+    let id = this.data.recipe.recipe_id;
+
+
+    if (lovedRecipes != null) {
+      // 1- loveArray exist. check if the recipe is liked
+      let foundId = lovedRecipes.find(element => element === id);
+      if (foundId != null) {
+        // 2 - The recipe is liked - change it to unlike
+        // remove the recipe id from lovedRecipes
+        lovedRecipes = lovedRecipes.filter(currId => currId != id)
+        isLove = false;
+      } else {
+        // 3 - The recipe is not liked - change it to like
+        // push the recipe id to the lovedRecipes
+        lovedRecipes.push(id);
+        isLove = true
+      }
+    } else {
+      // 4 - lovedRecipes does not exist. 
+      localStorage.setItem('lovedReipes', [id]);
+      isLove = true;
+    }
+    return isLove;
   }
 }

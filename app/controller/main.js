@@ -24,11 +24,11 @@ import {
   Pagination
 } from '../view/scripts/pagination';
 
-
 // Global Veriables
 var state = {
   recipes: {},
   recipe: {},
+  recipeView: {},
   currentPage: 1,
   numPages: 1
 };
@@ -80,8 +80,14 @@ function onSubstractServings(event) {
   controlRecipeIngredients();
 }
 
-function onLove(event){
+function onLove(event) {
+  // Model
+  // Call toggleLove
+  // Get new love value from model
+  controlLove();
 
+  // View
+  // Call Recipe.updateLove to render the new value
 }
 
 function onPagination(event) {
@@ -126,15 +132,8 @@ function controlPagination() {
 }
 
 function controlRecipe() {
-  let data = state.recipe.data.recipe;
-  let props = {
-    imgUrl: data.image_url,
-    title: data.title,
-    ingredients: data.ingredients,
-    sourceUrl: data.source_url,
-    publisher: data.publisher,
-    servings: data.servings
-  };
+  let props = state.recipe.data.recipe;
+
   state.recipeView = new RecipeView(props);
   state.recipeView.render();
   attachRecipeEventListeners();
@@ -145,9 +144,17 @@ function controlRecipeIngredients() {
   attachRecipeEventListeners();
 }
 
+function controlLove() {
+  state.recipe
+    .toggleLove()
+    .then(isLove => recipeView.updateLove(isLove))
+    .catch(err => alert(err));
+}
+
 function attachRecipeEventListeners() {
   domElements
     .getInfoButtons()[0]
     .addEventListener('click', onSubstractServings);
   domElements.getInfoButtons()[1].addEventListener('click', onAddServings);
+  domElements.getRecipeLove().addEventListener('click', onLove);
 }

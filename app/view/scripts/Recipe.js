@@ -24,15 +24,14 @@ export class RecipeView {
   }
 
   updateLove(isLove) {
-    this.props.love = isLove;
-    updateLoveButton();
+    this.props.isLove = isLove;
+    updateLoveButton(isLove);
   }
 }
 
-
-function updateLoveButton() {
+function updateLoveButton(isLove) {
   let domLove = domElements.getRecipeLove();
-  if (this.props.isLove) {
+  if (isLove) {
     domElements.getRecipeLove().classList.remove('background-image--none');
   } else {
     domElements.getRecipeLove().classList.add('background-image--none');
@@ -47,17 +46,22 @@ function renderFigure() {
 </figure>`;
 }
 
+
+
+
 function renderDetails() {
   let markup = `<div class="recipe__details">
   <div class="recipe__info">
     <svg class="recipe__info-icon">
       <use xlink:href="./images/spritemap.svg#sprite-stopwatch"></use>
-    </svg><span class="recipe__info-data recipe__info-data--minutes">45</span><span class="recipe__info-text"> minutes</span>
+    </svg><span class="recipe__info-data recipe__info-data--minutes">${this.props.time}</span><span class="recipe__info-text"> minutes</span>
   </div>
   <div class="recipe__info">
     <svg class="recipe__info-icon">
       <use xlink:href="./images/spritemap.svg#sprite-man"></use>
-    </svg><span class="recipe__info-data recipe__info-data--people">${this.props.servings}</span><span class="recipe__info-text"> servings</span>
+    </svg><span class="recipe__info-data recipe__info-data--people">${
+      this.props.servings
+    }</span><span class="recipe__info-text"> servings</span>
     <div class="recipe__info-buttons">
       <button class="btn-tiny">
         <svg>
@@ -84,8 +88,8 @@ function renderDetails() {
   } else {
     domElements.recipe.innerHTML += markup;
   }
-  updateLoveButton = updateLoveButton.bind(this);
-  updateLoveButton();
+
+  updateLoveButton(this.props.isLove);
 }
 
 function renderIngredients() {

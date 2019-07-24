@@ -3,6 +3,10 @@ import {
   promised
 } from 'q';
 
+import {
+  LikedRecipes
+} from './LikedRecipes';
+
 export class RecipeModel {
   constructor() {}
   getRecipe1(id) {
@@ -48,16 +52,18 @@ export class RecipeModel {
     };
     let ingredients = parseIngredients(this.data.recipe.ingredients);
     let servings = 4; // the default servings
-
+    let time = this.getTime();
     // find if the recipe is loved
 
-    let isLove = localStorage.getItem(this.data.recipe.recipe_id) != null;
+    let isLove = LikedRecipes.isLiked(id);
+
 
     let obj = {
       ingredients: ingredients,
       servings: servings,
       id: this.data.recipe.recipe_id,
-      isLove: isLove
+      isLove: isLove,
+      time: time
     };
 
     this.data.recipe = {
@@ -161,8 +167,17 @@ export class RecipeModel {
       });
       return newIngredients;
     }
+
+
   }
 
+  getTime() {
+    let numIngredients = this.data.recipe.ingredients.length;
+    let time = numIngredients * 4;
+    return time;
+  }
+
+  // Fun
   updateServings(isAdd) {
     var currServings = this.data.recipe.servings;
     let newServings = currServings;
@@ -178,19 +193,24 @@ export class RecipeModel {
   }
   toggleLove() {
     let id = this.data.recipe.recipe_id;
-    let isLove = localStorage.getItem(id) != null;
+    let isLove = LikedRecipes.isLiked(id);
 
-    // 1 - Recipe is liked - so unlike it - remove id from local storage
-    if (isLove) localStorage.removeItem(id);
-    // 2- Recipe is unliked - like it - add the id to local storage
-    else localStorage.setItem(id, "");
+    // 1 - Recipe is liked - so unlike it - remove id from LikedRecipes
+    if (isLove) LikedRecipes.removeRecipe(id);
+    // 2- Recipe is unliked - like it - add the id to LikedRecipes
+    else LikedRecipes.addRecipe(id);
 
-    this.data.recipe.isLove = localStorage.getItem(id) != null;
+    this.data.recipe.isLove = LikedRecipes.isLiked(id);
     let p = new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
       }, 300);
     });
     return p;
+  }
+
+  getIngredients() {
+    let ingredients = this.data.recipe.ingredients;
+    return ingredients;
   }
 }

@@ -24,20 +24,25 @@ import {
   Pagination
 } from '../view/scripts/pagination';
 
+import {
+  state
+} from './state';
+
+import {
+  initShoppingList
+} from './ShoppingList';
+
+import {
+  onAddToShopping
+} from './ShoppingList'
 // Global Veriables
-var state = {
-  recipes: {},
-  recipe: {},
-  recipeView: {},
-  currentPage: 1,
-  numPages: 1
-};
+
 const recipesPerPage = 10;
 
-// Attanging global Event handlers
+// Attanching global Event handlers
 domElements.search.addEventListener('submit', onSearch);
 window.onhashchange = hashHandler;
-
+initShoppingList();
 // Event handlers
 function onSearch(event) {
   event.preventDefault();
@@ -145,10 +150,26 @@ function controlRecipeIngredients() {
 }
 
 function controlLove() {
-  state.recipe
+  return state.recipe
     .toggleLove()
-    .then(() => state.recipeView.updateLove(state.recipe.data.recipe.isLove))
+    .then(() => {
+      let recipe = state.recipe.data.recipe;
+      state.recipeView.updateLove(recipe.isLove);
+      // update the likedRecipes view
+      if (recipe.isLove) {
+        state.likedRecipes.view.add(recipe);
+      } else state.likedRecipes.view.remove(recipe.recipe_id);
+    })
     .catch(err => alert(err));
+}
+
+function controlLikedRecipes() {
+  let likedRecipe = {
+    image_url: recipe.image_url,
+    title: recipe.title,
+    publisher_url: recipe.publisher_url
+  };
+  state.LikedRecipes.view.add(recipe);
 }
 
 function attachRecipeEventListeners() {
@@ -157,4 +178,5 @@ function attachRecipeEventListeners() {
     .addEventListener('click', onSubstractServings);
   domElements.getInfoButtons()[1].addEventListener('click', onAddServings);
   domElements.getRecipeLove().addEventListener('click', onLove);
+  domElements.getAddToShoppingBtn().addEventListener('click', onAddToShopping);
 }

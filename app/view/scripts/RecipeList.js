@@ -27,14 +27,19 @@ Request: https://www.food2fork.com/api/search?key={API_KEY}&q=shredded%20chicken
 }
 */
 
-import {
-  domElements
-} from './elements'
+import { domElements } from './elements';
 let spinner = require('../templates/spinningLoader.pug');
 
 export class RecipeList {
-  constructor(recipes) {
+  constructor(state, recipes) {
+    // state may be 'validList'/waiting/noQuery
     this.recipes = recipes;
+    if (state === 'validList') {
+      if (recipes.length < 1) this.state = 'noResults';
+      else this.state = state; //validList
+    } else {
+      this.state = state; // waiting or no query
+    }
   }
   render() {
     let DOMResultslist = document.createElement('ul');
@@ -45,9 +50,15 @@ export class RecipeList {
 
     // 2 - determine the content of the list to display
 
-    if (this.recipes) {
-      // recipe list exists
-      this.recipes.forEach(function (recipe) {
+    if (this.state === 'noResults') {
+      // 2.1 - Empty list
+      DOMResultslist.innerHTML = `<h2>Results not found</h2>`;
+    } else if (this.state === 'noQuery') {
+      // 2.2 - no query string
+      DOMResultslist.innerHTML = `<h2>Please enter a search query</h2>`;
+    } else if (this.state === 'validList') {
+      // 2.3 - results exist
+      this.recipes.forEach(function(recipe) {
         // get the id
         const regex = /(?<=\/)\w*$/;
         const id = regex.exec(recipe.f2f_url);
@@ -61,16 +72,15 @@ export class RecipeList {
 
         // add the recipe to the list
         DOMResultslist.innerHTML += recipeHTML;
-      })
-    } else {
-      // no recipe list - just render a spinner
+      });
+    } else if (this.state === 'waiting') {
+      // 2.4 Waiting - just render a spinner
       domElements.results.innerHTML = spinner();
     }
 
     // 3 - add the list to the DOM.
     domElements.results.appendChild(DOMResultslist);
   }
-
 }
 
 function getRecipeHTML(id, img, resultName, resultAuthor) {
@@ -80,5 +90,5 @@ function getRecipeHTML(id, img, resultName, resultAuthor) {
     <h4 class="results__name">${resultName}</h4>
     <p class="results__author">${resultAuthor}</p>
   </div></a></li>`;
-  return recipeHTML
+  return recipeHTML;
 }

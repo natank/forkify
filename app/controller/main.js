@@ -1,40 +1,22 @@
 import '../view/scripts/main';
 
-import {
-  RecipeModel
-} from '../model/recipe';
+import { RecipeModel } from '../model/recipe';
 
-import {
-  RecipeView
-} from '../view/scripts/Recipe';
+import { RecipeView } from '../view/scripts/Recipe';
 
-import {
-  RecipeList
-} from '../view/scripts/RecipeList';
+import { RecipeList } from '../view/scripts/RecipeList';
 
-import {
-  domElements
-} from '../view/scripts/elements';
+import { domElements } from '../view/scripts/elements';
 
-import {
-  Search
-} from '../model/Search';
+import { Search } from '../model/Search';
 
-import {
-  Pagination
-} from '../view/scripts/pagination';
+import { Pagination } from '../view/scripts/pagination';
 
-import {
-  state
-} from './state';
+import { state } from './state';
 
-import {
-  initShoppingList
-} from './ShoppingList';
+import { initShoppingList } from './ShoppingList';
 
-import {
-  onAddToShopping
-} from './ShoppingList'
+import { onAddToShopping } from './ShoppingList';
 // Global Veriables
 const recipesPerPage = 10;
 // wait for the DOM to load before accessing domElements
@@ -48,26 +30,25 @@ document.addEventListener('readystatechange', () => {
 });
 // Event handlers
 function onSearch(event) {
-
   event.preventDefault();
   // reset the recipes property
   state.recipes.recipes = null;
   // display waiting spinner
-  controlRecipeList();
-
+  controlRecipeList('waiting');
 
   try {
     let queryString = domElements.searchField.value;
-    if (queryString) {
+    if (queryString === '') {
+      controlRecipeList('noQuery');
+    } else if (queryString) {
       var search = new Search(queryString);
       search.getResults().then(() => {
         state.recipes = search.recipes;
         state.currentPage = 1;
         state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
 
-        controlRecipeList();
+        controlRecipeList('validList');
         controlPagination();
-
       });
     }
   } catch (error) {
@@ -115,31 +96,38 @@ function onPagination(event) {
   if (btn.classList.contains('results__btn--prev')) {
     if (state.currentPage > 1) {
       state.currentPage--;
-      controlRecipeList();
+      controlRecipeList('validList');
       controlPagination();
     }
   } else if (btn.classList.contains('results__btn--next')) {
     if (state.currentPage < state.numPages) {
       state.currentPage++;
-      controlRecipeList();
+      controlRecipeList('validList');
       controlPagination();
     }
   }
 }
 
 // Control the status of the recipe list
-function controlRecipeList() {
-  let recipes = state.recipes.recipes;
-  if (recipes) {
+function controlRecipeList(listState) {
+  if (listState === 'noQuery') {
+    state.recipeList = new RecipeList(listState);
+  } else if (listState === 'validList') {
+    let recipes = state.recipes.recipes;
+
     // recipes already arrived from the model
     let pageStartIndex = (state.currentPage - 1) * recipesPerPage;
 
     state.recipeList = new RecipeList(
-      state.recipes.recipes.slice(pageStartIndex, pageStartIndex + recipesPerPage)
+      listState,
+      state.recipes.recipes.slice(
+        pageStartIndex,
+        pageStartIndex + recipesPerPage
+      )
     );
-  } else {
-    // No recipes - Create a RecipeList with no list - waiting for items to come 
-    state.recipeList = new RecipeList(null);
+  } else if (listState === 'waiting') {
+    // No recipes - Create a RecipeList with no list - waiting for items to come
+    state.recipeList = new RecipeList(listState);
   }
 
   state.recipeList.render();

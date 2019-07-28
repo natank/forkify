@@ -17,7 +17,7 @@ app.use(
 
 app.use(require('webpack-hot-middleware')(compiler));
 
-app.listen(3000, () => console.log('Example app listening on port 3000'));
+app.listen(3000, () => console.log(`Example app listening on port 3000. NODE_ENV = ${process.env.NODE_ENV}`));
 
 app.get('/search', function (req, res) {
   // https://www.food2fork.com/api/search?key=YOUR_API_KEY&q=chicken%20breast&page=2

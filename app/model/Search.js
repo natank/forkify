@@ -6,7 +6,7 @@ export class Search {
   constructor(query) {
     this.query = query;
   }
-  getResults1() {
+  getResults() {
     if (this.query) {
       let URL = `http://127.0.0.1:3000/search/?searchString=${this.query}`;
       return fetch(URL)
@@ -22,7 +22,7 @@ export class Search {
     }
   }
 
-  getResults() {
+  getResults1() {
     let data = {
       count: 30,
       recipes: [{
@@ -330,7 +330,7 @@ export class Search {
     let p = new Promise(function (resolve, reject) {
       setTimeout(function () {
         resolve(data);
-      }, 300);
+      }, 2300);
     })
     return p
       .then((function (recipes) {

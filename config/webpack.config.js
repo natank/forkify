@@ -21,7 +21,8 @@ module.exports = {
     injectHot: true
   },
   module: {
-    rules: [{
+    rules: [
+      {
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
@@ -46,22 +47,26 @@ module.exports = {
       {
         test: /\.html$/,
         exclude: /\index.html$/,
-        use: [{
-          loader: 'html-loader',
-          options: {
-            attrs: ['img:src']
+        use: [
+          {
+            loader: 'html-loader',
+            options: {
+              attrs: ['img:src']
+            }
           }
-        }]
+        ]
       },
       {
         test: /\.(jpg|gif|png|svg)$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: 'images/[name]-[hash:8].[ext]',
-            context: path.resolve(__dirname, './app/assets/')
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'images/[name]-[hash:8].[ext]',
+              context: path.resolve(__dirname, './app/assets/')
+            }
           }
-        }]
+        ]
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -94,7 +99,8 @@ module.exports = {
     new CleanWebpackPlugin(),
 
     new HtmlWebpackPlugin({
-      template: 'app/view/index.pug'
+      template: 'app/view/index.pug',
+      inject: 'head'
     }),
     new SVGSpritemapPlugin('app/view/img/svg/*.svg', {
       output: {

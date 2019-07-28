@@ -133,7 +133,7 @@ function renderDirections() {
   ${
     this.props.publisher
   }</span>. Please check out directions at their website.</p><a class="btn-small recipe__btn" href=${
-    this.props.sourceUrl
+    this.props.source_url
   } target="_blank"><span>Directions</span>
   <svg class="search__icon">
     <use xlink:href="./images/spritemap.svg#sprite-triangle-right"></use>

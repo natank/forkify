@@ -196,6 +196,7 @@ body {
   color: #968B87;
 }
 
+/*
 .loader {
   margin: 5rem auto;
   text-align: center;
@@ -218,7 +219,7 @@ body {
     transform: rotate(360deg);
   }
 }
-
+*/
 .header {
   grid-area: head;
   background-color: #F9F5F3;
@@ -314,6 +315,7 @@ body {
 .results,
 .likes {
   padding: 3rem 0;
+  position: relative;
 }
 
 .results__list,
@@ -612,6 +614,17 @@ body {
   padding: 3rem 4rem;
   display: flex;
   flex-direction: column;
+
+  &__btn {
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+
+    &>*:first-child {
+      margin-right: auto;
+    }
+  }
+
 }
 
 .shopping__list {

@@ -36,26 +36,40 @@ import {
   onAddToShopping
 } from './ShoppingList'
 // Global Veriables
-
 const recipesPerPage = 10;
-
-// Attanching global Event handlers
-domElements.search.addEventListener('submit', onSearch);
-window.onhashchange = hashHandler;
-initShoppingList();
+// wait for the DOM to load before accessing domElements
+document.addEventListener('readystatechange', () => {
+  if (document.readyState === 'complete') {
+    // Attanching global Event handlers
+    domElements.search.addEventListener('submit', onSearch);
+    window.onhashchange = hashHandler;
+    initShoppingList();
+  }
+});
 // Event handlers
 function onSearch(event) {
-  event.preventDefault();
-  try {
-    var search = new Search('pizza');
-    search.getResults().then(() => {
-      state.recipes = search.recipes;
-      state.currentPage = 1;
-      state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
 
-      controlRecipeList();
-      controlPagination();
-    });
+  event.preventDefault();
+  // reset the recipes property
+  state.recipes.recipes = null;
+  // display waiting spinner
+  controlRecipeList();
+
+
+  try {
+    let queryString = domElements.searchField.value;
+    if (queryString) {
+      var search = new Search(queryString);
+      search.getResults().then(() => {
+        state.recipes = search.recipes;
+        state.currentPage = 1;
+        state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
+
+        controlRecipeList();
+        controlPagination();
+
+      });
+    }
   } catch (error) {
     console.log(`error getting search results: ${error}`);
   }
@@ -115,10 +129,18 @@ function onPagination(event) {
 
 // Control the status of the recipe list
 function controlRecipeList() {
-  let pageStartIndex = (state.currentPage - 1) * recipesPerPage;
-  state.recipeList = new RecipeList(
-    state.recipes.recipes.slice(pageStartIndex, pageStartIndex + recipesPerPage)
-  );
+  let recipes = state.recipes.recipes;
+  if (recipes) {
+    // recipes already arrived from the model
+    let pageStartIndex = (state.currentPage - 1) * recipesPerPage;
+
+    state.recipeList = new RecipeList(
+      state.recipes.recipes.slice(pageStartIndex, pageStartIndex + recipesPerPage)
+    );
+  } else {
+    // No recipes - Create a RecipeList with no list - waiting for items to come 
+    state.recipeList = new RecipeList(null);
+  }
 
   state.recipeList.render();
 }

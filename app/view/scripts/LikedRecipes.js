@@ -37,7 +37,7 @@ export class LikedRecipes {
   render() {
     let domLikesList = domElements.getLikesList();
 
-    if (Array.isArray(this.recipes)) {
+    if (this.recipes.length > 0) {
       let markup = this.recipes.reduce((acc, recipe) => {
         let markup = `<li><a class="likes__link" href="#${recipe.recipe_id}">
         <figure class="likes__fig"><img src="${recipe.image_url}" alt="Test"/></figure>

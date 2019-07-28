@@ -1,28 +1,25 @@
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
-
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 const hotMiddlewareScript =
   'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
 
 module.exports = {
-  mode: 'development',
-  devtool: 'eval-source-map',
   entry: {
-    main: ['./app/main.js', hotMiddlewareScript]
+    main: './app/main.js'
   },
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    overlay: true,
-    hot: true,
-    injectHot: true
+  output: {
+    filename: '[name].js',
+    path: path.join(__dirname, '../dist'),
+    publicPath: '/'
   },
+  target: 'web',
+  devtool: 'source-map',
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
@@ -46,27 +43,23 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        exclude: /\index.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: {
-              attrs: ['img:src']
-            }
+        use: [{
+          loader: 'html-loader',
+          options: {
+            attrs: ['img:src']
+            //options:{minimize:true}
           }
-        ]
+        }]
       },
       {
         test: /\.(jpg|gif|png|svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'images/[name]-[hash:8].[ext]',
-              context: path.resolve(__dirname, './app/assets/')
-            }
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: 'images/[name]-[hash:8].[ext]',
+            context: path.resolve(__dirname, './app/view/img/')
           }
-        ]
+        }]
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -77,9 +70,6 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
         }
       },
       {
@@ -96,10 +86,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].[hash].css'
     }),
-    new CleanWebpackPlugin(),
-
     new HtmlWebpackPlugin({
-      template: 'app/view/index.pug',
+      template: './app/view/index.pug',
+      filename: './index.html',
+      excludeChunks: ['server'],
       inject: 'head'
     }),
     new SVGSpritemapPlugin('app/view/img/svg/*.svg', {
@@ -109,9 +99,5 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
-  output: {
-    filename: '[name].[hash].js',
-    path: path.resolve(__dirname, '../dist'),
-    publicPath: '/'
-  }
+
 };

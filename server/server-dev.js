@@ -1,23 +1,20 @@
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const express = require('express');
-const fetch = require('node-fetch');
+import {
+  webpack
+} from 'webpack';
+import {
+  webpackDevMiddleware
+} from 'webpack-dev-middleware';
+import express from 'express';
+import fetch from 'node-fetch';
+import path from 'path';
 
-const app = express();
-const config = require('../config/webpack.config.js');
-const compiler = webpack(config);
+const app = express(),
+  DIST_DIR = path.join(__dirname, '../dist'),
+  HTML_FILE = path.join(DIST_DIR, 'index.html');
 
 app.use(express.static('../dist'));
 
-app.use(
-  webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath
-  })
-);
-
-app.use(require('webpack-hot-middleware')(compiler));
-
-app.listen(3000, () => console.log(`Example app listening on port 3000. NODE_ENV = ${process.env.NODE_ENV}`));
+app.listen(process.env.PORT || 3000, () => console.log(`Example app listening on port 3000. NODE_ENV = ${process.env.NODE_ENV} DIST_DIR = ${__dirname} HTML_FILE = ${HTML_FILE}`));
 
 app.get('/search', function (req, res) {
   // https://www.food2fork.com/api/search?key=YOUR_API_KEY&q=chicken%20breast&page=2

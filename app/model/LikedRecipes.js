@@ -9,16 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (allRecipes) {
         allRecipes = allRecipes.split(',')
-
-        allRecipes = allRecipes.map((id) => {
-          let recipe = {
-            title: 'Cauliflower Pizza Crust Volve Recipe',
-            publisher: 'Zigi Golbo',
-            image_url: 'http://static.food2fork.com/CauliflowerPizzaCrustRecipe06fdc.jpg',
-            recipe_id: id
-          }
-          return recipe
-        })
       } else {
         allRecipes = [];
       }

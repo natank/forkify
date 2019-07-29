@@ -43,7 +43,7 @@ export class LikedRecipes {
         <figure class="likes__fig"><img src="${recipe.image_url}" alt="Test"/></figure>
         <div class="likes__data">
           <h4 class="likes__name">${recipe.title}</h4>
-          <p class="likes__author">${recipe.publisher}, ${recipe.recipe_id}</p>
+          <p class="likes__author">${recipe.publisher}</p>
         </div></a></li>`;
         return markup + acc;
       }, '');

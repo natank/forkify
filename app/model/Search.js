@@ -8,7 +8,7 @@ export class Search {
   }
   getResults() {
     if (this.query) {
-      let URL = `http://127.0.0.1:3000/search/?searchString=${this.query}`;
+      let URL = `${location.origin}/search/?searchString=${this.query}`;
       return fetch(URL)
         .then(function (response) {
           return response.json()
@@ -21,7 +21,7 @@ export class Search {
         });
     }
   }
-
+  /* develblock:start */
   getResults1() {
     let data = {
       count: 30,
@@ -340,5 +340,5 @@ export class Search {
         alert(error.message)
       });
   }
-
+  /* develblock:end */
 }

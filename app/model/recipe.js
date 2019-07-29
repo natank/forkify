@@ -18,7 +18,7 @@ import {
 export class RecipeModel {
   constructor() {}
   getRecipe(id) {
-    let URL = `http://127.0.0.1:3000/recipe?recipeId=${id}`;
+    let URL = `${location.origin}/recipe?recipeId=${id}`;
     let that = this;
     return fetch(URL)
       .then(function (response) {

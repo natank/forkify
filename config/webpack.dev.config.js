@@ -1,36 +1,37 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
-const hotMiddlewareScript =
-  'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
+
 
 module.exports = {
   entry: {
-    main: './app/main.js'
+    main: ['webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000', './app/main.js']
   },
   output: {
     filename: '[name].js',
     path: path.join(__dirname, '../dist'),
     publicPath: '/'
   },
+  mode: 'development',
   target: 'web',
   devtool: 'source-map',
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ]
+  },
   module: {
     rules: [{
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1
-            }
-          },
-          'postcss-loader'
-        ]
+        use: ['style-loader', 'css-loader', 'postcss-loader']
       },
       {
         test: /\.scss$/,
@@ -46,8 +47,8 @@ module.exports = {
         use: [{
           loader: 'html-loader',
           options: {
-            attrs: ['img:src']
-            //options:{minimize:true}
+            attrs: ['img:src'],
+            minimize: true
           }
         }]
       },
@@ -83,9 +84,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash].css'
-    }),
     new HtmlWebpackPlugin({
       template: './app/view/index.pug',
       filename: './index.html',
@@ -97,7 +95,8 @@ module.exports = {
         filename: 'images/spritemap.svg'
       }
     }),
-    new webpack.HotModuleReplacementPlugin()
-  ],
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ]
 
 };

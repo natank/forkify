@@ -55,11 +55,7 @@ module.exports = {
       {
         test: /\.(jpg|gif|png|svg)$/,
         use: [{
-          loader: 'file-loader',
-          options: {
-            name: 'images/[name]-[hash:8].[ext]',
-            context: path.resolve(__dirname, './app/view/img/')
-          }
+          loader: 'url-loader',
         }]
       },
       {
@@ -85,7 +81,8 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].[hash].css'
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].css'
     }),
     new HtmlWebpackPlugin({
       template: './app/view/index.pug',
@@ -98,7 +95,6 @@ module.exports = {
         filename: 'images/spritemap.svg'
       }
     }),
-    new webpack.HotModuleReplacementPlugin()
   ],
 
 };

@@ -12,7 +12,9 @@ export const unitsLong = [
   'tablespoon',
   'tablespoons',
   'handful',
-  'handfuls'
+  'handfuls',
+  'pound',
+  'pounds'
 ];
 export const unitsShort = [
   'cup',
@@ -28,7 +30,9 @@ export const unitsShort = [
   'tbsp',
   'tbsp',
   'hand.',
-  'hand.'
+  'hand.',
+  'pound',
+  'pound'
 ];
 
 // represent the step when incrementing related quantities

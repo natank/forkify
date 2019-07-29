@@ -65,9 +65,13 @@ module.exports = {
       {
         test: /\.m?js$/,
         exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-        }
+        use: [{
+            loader: 'babel-loader',
+          },
+          {
+            loader: 'webpack-strip-block'
+          }
+        ]
       },
       {
         test: /\.pug$/,

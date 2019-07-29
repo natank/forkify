@@ -80,13 +80,20 @@ export class RecipeModel {
           // There is a unit
           const arrCount = arrIng.slice(0, unitIndex);
           let count;
-          if (arrCount.length === 1) {
-            count = eval(arrIng[0].replace('-', '+'));
-          } else {
-            count = eval(arrIng.slice(0, unitIndex.join('+')));
+          try {
+            if (arrCount.length === 1) {
+
+              count = eval(arrIng[0].replace('-', '+'));
+
+            } else {
+              count = eval(arrIng.slice(0, unitIndex).join('+'));
+            }
+          } catch (err) {
+            count = 1;
           }
           var roundedCount = Math.floor(count) + (Math.round((count - Math.floor(count))) ? 0.5 : 0.0);
-          count = roundedCount;
+          // If count is 0 - fix rounding to 0.25
+          count = roundedCount ? roundedCount : .25;
           objIng = {
             count: count,
             unit: arrIng[unitIndex],
@@ -113,7 +120,7 @@ export class RecipeModel {
     }
 
   }
-
+  /* develblock:start */
   getRecipe1(id) {
     this.data = {
 
@@ -156,6 +163,8 @@ export class RecipeModel {
         title: 'Cauliflower Pizza Crust Recipe'
       }
     };*/
+
+
     let ingredients = parseIngredients(this.data.recipe.ingredients);
     let servings = 4; // the default servings
     let time = this.getTime();
@@ -216,7 +225,7 @@ export class RecipeModel {
           if (arrCount.length === 1) {
             count = eval(arrIng[0].replace('-', '+'));
           } else {
-            count = eval(arrIng.slice(0, unitIndex.join('+')));
+            count = eval(arrIng.slice(0, unitIndex).join('+'));
           }
           let roundedCount = Math.floor(count) + (Math.round((count - Math.floor(count))) ? .5 : .0);
           count = roundedCount;
@@ -247,7 +256,7 @@ export class RecipeModel {
 
 
   }
-
+  /* develblock:end */
   getTime() {
     let numIngredients = this.data.recipe.ingredients.length;
     let time = numIngredients * 4;

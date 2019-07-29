@@ -1,9 +1,3 @@
-import {
-  webpack
-} from 'webpack';
-import {
-  webpackDevMiddleware
-} from 'webpack-dev-middleware';
 import express from 'express';
 import fetch from 'node-fetch';
 import path from 'path';

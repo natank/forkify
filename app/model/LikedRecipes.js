@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
       let allRecipes = localStorage.getItem('likedRecipes');
 
       if (allRecipes) {
-        allRecipes = allRecipes.split(',')
+        allRecipes = JSON.parse(allRecipes);
       } else {
         allRecipes = [];
       }
@@ -17,30 +17,41 @@ document.addEventListener('DOMContentLoaded', function () {
     },
 
     isLiked: id => {
-      let strRecipes = localStorage.getItem('likedRecipes');
-      if (strRecipes) {
-        return strRecipes.includes(id);
-      } else return false;
+      let allRecipes = JSON.parse(localStorage.getItem('likedRecipes'));
+      let isLiked = false;
+      if (allRecipes) {
+        for (let i = 0; i < allRecipes.length; i++) {
+          if (allRecipes[i].recipe_id == id) {
+            isLiked = true;
+            break;
+          }
+        }
+      }
+      return isLiked;
     },
 
-    addRecipe: id => {
-      let recipes = localStorage.getItem('likedRecipes');
-      if (recipes) {
-        recipes = recipes.split(',').concat(id).join(',')
-
-        localStorage.setItem('likedRecipes', recipes)
-      } else {
-        localStorage.setItem('likedRecipes', id);
+    addRecipe: recipe => {
+      let recipes = JSON.parse(localStorage.getItem('likedRecipes'));
+      let newLikedRecipe = {
+        recipe_id: recipe.recipe_id,
+        image_url: recipe.image_url,
+        publisher: recipe.publisher,
+        title: recipe.title
       }
+      if (recipes) {
+        recipes.push(newLikedRecipe);
+      } else {
+        recipes = [newLikedRecipe];
+      }
+      localStorage.setItem('likedRecipes', JSON.stringify(recipes));
     },
 
     removeRecipe: id => {
-      let recipes = localStorage.getItem('likedRecipes');
+      let recipes = JSON.parse(localStorage.getItem('likedRecipes'));
       if (recipes) {
-        recipes = recipes.split(',').filter((elem) => elem != id).join(',');
-        localStorage.setItem('likedRecipes', recipes);
+        recipes = recipes.filter((recipe) => recipe.recipe_id != id);
+        localStorage.setItem('likedRecipes', JSON.stringify(recipes));
       }
-
     }
   }
 });

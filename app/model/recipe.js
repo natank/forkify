@@ -8,15 +8,14 @@ import {
 } from './LikedRecipes';
 
 import {
-  unitsLong
+  unitsLong,
+  unitsShort
 } from './units';
 
-import {
-  unitsShort
-} from './units'
 
 export class RecipeModel {
   constructor() {}
+
   getRecipe(id) {
     let URL = `${location.origin}/recipe?recipeId=${id}`;
     let that = this;
@@ -49,77 +48,8 @@ export class RecipeModel {
       .catch(function (error) {
         alert(`Unable to get recipe: ${error.message}`);
       });
-
-    function parseIngredients(ingredients) {
-      /*
-      Example strings
-        1 teaspoon parsley
-        1 teaspoon salt
-        1/2 cup Manchengo sheep milk cheese (or Mozzarella)
-        2 eggs
-        cornmeal, to dust the pizza stone
-      */
-      // loop over ingredients.
-
-      let newIngredients = ingredients.map(function (theText) {
-        // Uniform units
-        let ingredient = theText.toLowerCase();
-        unitsLong.forEach((unit, i) => {
-          ingredient = ingredient.replace(unit, unitsShort[i]);
-        });
-        // 2 Remove parantheses
-        ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
-
-        ingredient = ingredient.slice(0, 35); //Limit ingredient length to 15 chars
-        // 3) Parse ingredients into count, unit and ingredient
-        const arrIng = ingredient.split(' ');
-        const unitIndex = arrIng.findIndex(el2 => unitsShort.includes(el2));
-
-        let objIng;
-        if (unitIndex > -1) {
-          // There is a unit
-          const arrCount = arrIng.slice(0, unitIndex);
-          let count;
-          try {
-            if (arrCount.length === 1) {
-
-              count = eval(arrIng[0].replace('-', '+'));
-
-            } else {
-              count = eval(arrIng.slice(0, unitIndex).join('+'));
-            }
-          } catch (err) {
-            count = 1;
-          }
-          var roundedCount = Math.floor(count) + (Math.round((count - Math.floor(count))) ? 0.5 : 0.0);
-          // If count is 0 - fix rounding to 0.25
-          count = roundedCount ? roundedCount : .25;
-          objIng = {
-            count: count,
-            unit: arrIng[unitIndex],
-            ingredient: arrIng.slice(unitIndex + 1).join(' ')
-          };
-        } else if (parseInt(arrIng[0], 10)) {
-          // There is NO unit, but 1st element is a number
-          objIng = {
-            count: parseInt(arrIng[0]),
-            unit: '',
-            ingredient: arrIng.slice(1).join(' ')
-          };
-        } else if (unitIndex === -1) {
-          // There is NO unit and NO number in 1st position
-          objIng = {
-            count: 1,
-            unit: '',
-            ingredient: ingredient
-          };
-        }
-        return objIng;
-      });
-      return newIngredients;
-    }
-
   }
+
   /* develblock:start */
   getRecipe1(id) {
     this.data = {
@@ -137,34 +67,6 @@ export class RecipeModel {
       }
 
     }
-
-    /*this.data = {
-      recipe: {
-        publisher: 'Vintage Mixer',
-        f2f_url: 'http://food2fork.com/view/7cad96',
-        ingredients: [
-          '1 small head of cauliflower, leaves and stems removed',
-          '1 teaspoon basil',
-          '1 teaspoon oregano',
-          '1 teaspoon parsley',
-          '1 teaspoon salt',
-          '1/2 cup Manchengo sheep milk cheese (or Mozzarella)',
-          '2 eggs',
-          'cornmeal, to dust the pizza stone',
-          '1 jar marinara or pizza sauce',
-          '1/2 cup sheep milk cheese',
-          '5-8 basil leaves'
-        ],
-        source_url: 'http://www.thevintagemixer.com/2013/03/cauliflower-pizza-crust-recipe/',
-        recipe_id: id,
-        image_url: 'http://static.food2fork.com/CauliflowerPizzaCrustRecipe06fdc.jpg',
-        social_rank: 99.99880589962325,
-        publisher_url: 'http://www.thevintagemixer.com/',
-        title: 'Cauliflower Pizza Crust Recipe'
-      }
-    };*/
-
-
     let ingredients = parseIngredients(this.data.recipe.ingredients);
     let servings = 4; // the default servings
     let time = this.getTime();
@@ -176,7 +78,7 @@ export class RecipeModel {
     let obj = {
       ingredients: ingredients,
       servings: servings,
-      id: this.data.recipe.recipe_id,
+      recipe_id: this.data.recipe.recipe_id,
       isLove: isLove,
       time: time
     };
@@ -192,69 +94,6 @@ export class RecipeModel {
       }, 300);
     });
     return p;
-
-    function parseIngredients(ingredients) {
-      /*
-      Example strings
-        1 teaspoon parsley
-        1 teaspoon salt
-        1/2 cup Manchengo sheep milk cheese (or Mozzarella)
-        2 eggs
-        cornmeal, to dust the pizza stone
-      */
-      // loop over ingredients.
-
-      let newIngredients = ingredients.map(function (theText) {
-        // Uniform units
-        let ingredient = theText.toLowerCase();
-        unitsLong.forEach((unit, i) => {
-          ingredient = ingredient.replace(unit, unitsShort[i]);
-        });
-        // 2 Remove parantheses
-        ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
-        ingredient = ingredient.slice(0, 35); //limit the length of ingredient to 15 chars
-        // 3) Parse ingredients into count, unit and ingredient
-        const arrIng = ingredient.split(' ');
-        const unitIndex = arrIng.findIndex(el2 => unitsShort.includes(el2));
-
-        let objIng;
-        if (unitIndex > -1) {
-          // There is a unit
-          const arrCount = arrIng.slice(0, unitIndex);
-          let count;
-          if (arrCount.length === 1) {
-            count = eval(arrIng[0].replace('-', '+'));
-          } else {
-            count = eval(arrIng.slice(0, unitIndex).join('+'));
-          }
-          let roundedCount = Math.floor(count) + (Math.round((count - Math.floor(count))) ? .5 : .0);
-          count = roundedCount;
-          objIng = {
-            count: count,
-            unit: arrIng[unitIndex],
-            ingredient: arrIng.slice(unitIndex + 1).join(' ')
-          };
-        } else if (parseInt(arrIng[0], 10)) {
-          // There is NO unit, but 1st element is a number
-          objIng = {
-            count: parseInt(arrIng[0]),
-            unit: '',
-            ingredient: arrIng.slice(1).join(' ')
-          };
-        } else if (unitIndex === -1) {
-          // There is NO unit and NO number in 1st position
-          objIng = {
-            count: 1,
-            unit: '',
-            ingredient: ingredient
-          };
-        }
-        return objIng;
-      });
-      return newIngredients;
-    }
-
-
   }
   /* develblock:end */
   getTime() {
@@ -278,13 +117,14 @@ export class RecipeModel {
     return this.data.recipe;
   }
   toggleLove() {
-    let id = this.data.recipe.recipe_id;
-    let isLove = LikedRecipes.isLiked(id);
+    let recipe = this.data.recipe;
+    let id = recipe.recipe_id;
+    let isLove = recipe.isLove;
 
     // 1 - Recipe is liked - so unlike it - remove id from LikedRecipes
     if (isLove) LikedRecipes.removeRecipe(id);
     // 2- Recipe is unliked - like it - add the id to LikedRecipes
-    else LikedRecipes.addRecipe(id);
+    else LikedRecipes.addRecipe(recipe);
 
     this.data.recipe.isLove = LikedRecipes.isLiked(id);
     let p = new Promise((resolve, reject) => {
@@ -299,4 +139,73 @@ export class RecipeModel {
     let ingredients = this.data.recipe.ingredients;
     return ingredients;
   }
+}
+
+function parseIngredients(ingredients) {
+  /*
+  Example strings
+    1 teaspoon parsley
+    1 teaspoon salt
+    1/2 cup Manchengo sheep milk cheese (or Mozzarella)
+    2 eggs
+    cornmeal, to dust the pizza stone
+  */
+  // loop over ingredients.
+
+  let newIngredients = ingredients.map(function (theText) {
+    // Uniform units
+    let ingredient = theText.toLowerCase();
+    unitsLong.forEach((unit, i) => {
+      ingredient = ingredient.replace(unit, unitsShort[i]);
+    });
+    // 2 Remove parantheses
+    ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
+
+    ingredient = ingredient.slice(0, 35); //Limit ingredient length to 15 chars
+    // 3) Parse ingredients into count, unit and ingredient
+    const arrIng = ingredient.split(' ');
+    const unitIndex = arrIng.findIndex(el2 => unitsShort.includes(el2));
+
+    let objIng;
+    if (unitIndex > -1) {
+      // There is a unit
+      const arrCount = arrIng.slice(0, unitIndex);
+      let count;
+      try {
+        if (arrCount.length === 1) {
+
+          count = eval(arrIng[0].replace('-', '+'));
+
+        } else {
+          count = eval(arrIng.slice(0, unitIndex).join('+'));
+        }
+      } catch (err) {
+        count = 1;
+      }
+      var roundedCount = Math.floor(count) + (Math.round((count - Math.floor(count))) ? 0.5 : 0.0);
+      // If count is 0 - fix rounding to 0.25
+      count = roundedCount ? roundedCount : .25;
+      objIng = {
+        count: count,
+        unit: arrIng[unitIndex],
+        ingredient: arrIng.slice(unitIndex + 1).join(' ')
+      };
+    } else if (parseInt(arrIng[0], 10)) {
+      // There is NO unit, but 1st element is a number
+      objIng = {
+        count: parseInt(arrIng[0]),
+        unit: '',
+        ingredient: arrIng.slice(1).join(' ')
+      };
+    } else if (unitIndex === -1) {
+      // There is NO unit and NO number in 1st position
+      objIng = {
+        count: 1,
+        unit: '',
+        ingredient: ingredient
+      };
+    }
+    return objIng;
+  });
+  return newIngredients;
 }

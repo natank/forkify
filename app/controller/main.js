@@ -1,22 +1,47 @@
 import '../view/scripts/main';
 
-import { RecipeModel } from '../model/recipe';
+import {
+  RecipeModel
+} from '../model/recipe';
 
-import { RecipeView } from '../view/scripts/Recipe';
+import {
+  RecipeView
+} from '../view/scripts/Recipe';
+import {
+  LikedRecipes as LikedRecipesView
+} from '../view/scripts/LikedRecipes';
 
-import { RecipeList } from '../view/scripts/RecipeList';
+import {
+  LikedRecipes as LikedRecipesModel
+} from '../model/LikedRecipes';
+import {
+  RecipeList
+} from '../view/scripts/RecipeList';
 
-import { domElements } from '../view/scripts/elements';
+import {
+  domElements
+} from '../view/scripts/elements';
 
-import { Search } from '../model/Search';
+import {
+  Search
+} from '../model/Search';
 
-import { Pagination } from '../view/scripts/pagination';
+import {
+  Pagination
+} from '../view/scripts/pagination';
 
-import { state } from './state';
+import {
+  state
+} from './state';
 
-import { initShoppingList } from './ShoppingList';
+import {
+  initShoppingList,
+  onAddToShopping
+} from './ShoppingList';
+import {
+  all
+} from 'q';
 
-import { onAddToShopping } from './ShoppingList';
 // Global Veriables
 const recipesPerPage = 10;
 // wait for the DOM to load before accessing domElements
@@ -25,6 +50,7 @@ document.addEventListener('readystatechange', () => {
     // Attanching global Event handlers
     domElements.search.addEventListener('submit', onSearch);
     window.onhashchange = hashHandler;
+    initLikedRecipes();
     initShoppingList();
   }
 });
@@ -46,9 +72,12 @@ function onSearch(event) {
         state.recipes = search.recipes;
         state.currentPage = 1;
         state.numPages = Math.ceil(state.recipes.count / recipesPerPage);
-
-        controlRecipeList('validList');
-        controlPagination();
+        if (state.recipes.error) {
+          controlRecipeList('error');
+        } else {
+          controlRecipeList('validList');
+          controlPagination();
+        }
       });
     }
   } catch (error) {
@@ -125,7 +154,7 @@ function controlRecipeList(listState) {
         pageStartIndex + recipesPerPage
       )
     );
-  } else if (listState === 'waiting') {
+  } else if (listState === 'waiting' || listState === 'error') {
     // No recipes - Create a RecipeList with no list - waiting for items to come
     state.recipeList = new RecipeList(listState);
   }
@@ -159,27 +188,32 @@ function controlRecipeIngredients() {
   attachRecipeEventListeners();
 }
 
+
+// controlLove:
+// save liked recipe to local storage
+// update likedRecies and recipe view.
 function controlLove() {
   return state.recipe
-    .toggleLove()
+    .toggleLove() // update the model
     .then(() => {
+      // updated the view
       let recipe = state.recipe.data.recipe;
       state.recipeView.updateLove(recipe.isLove);
       // update the likedRecipes view
       if (recipe.isLove) {
         state.likedRecipes.view.add(recipe);
-      } else state.likedRecipes.view.remove(recipe.recipe_id);
+      } else {
+        state.likedRecipes.view.remove(recipe.recipe_id);
+      }
     })
     .catch(err => alert(err));
 }
-
-function controlLikedRecipes() {
-  let likedRecipe = {
-    image_url: recipe.image_url,
-    title: recipe.title,
-    publisher_url: recipe.publisher_url
-  };
-  state.LikedRecipes.view.add(recipe);
+// initLikedRecipes:
+// get all liked recipes on document load
+function initLikedRecipes() {
+  state.likedRecipes.model = LikedRecipesModel;
+  let allLikedRecipes = state.likedRecipes.model.getAllLikedRecipes();
+  state.likedRecipes.view = new LikedRecipesView(allLikedRecipes);
 }
 
 function attachRecipeEventListeners() {

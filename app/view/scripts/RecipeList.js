@@ -27,7 +27,9 @@ Request: https://www.food2fork.com/api/search?key={API_KEY}&q=shredded%20chicken
 }
 */
 
-import { domElements } from './elements';
+import {
+  domElements
+} from './elements';
 let spinner = require('../templates/spinningLoader.pug');
 
 export class RecipeList {
@@ -56,9 +58,11 @@ export class RecipeList {
     } else if (this.state === 'noQuery') {
       // 2.2 - no query string
       DOMResultslist.innerHTML = `<h2>Please enter a search query</h2>`;
+    } else if (this.state === 'error') {
+      DOMResultslist.innerHTML = `<h2>We're sorry, the service is currently un available, please try again later</h2>`;
     } else if (this.state === 'validList') {
       // 2.3 - results exist
-      this.recipes.forEach(function(recipe) {
+      this.recipes.forEach(function (recipe) {
         // get the id
         const regex = /(?<=\/)\w*$/;
         const id = regex.exec(recipe.f2f_url);

@@ -8,9 +8,6 @@ import {
   ShoppingList as ShoppingListModel
 } from '../model/ShoppingList.js';
 import {
-  domElements
-} from '../view/scripts/elements';
-import {
   state
 } from './state';
 

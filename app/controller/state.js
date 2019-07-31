@@ -7,8 +7,6 @@ import {
 } from '../view/scripts/LikedRecipes';
 var state = null;
 document.addEventListener('DOMContentLoaded', function () {
-  let allLikedRecipes = LikedRecipesModel.getAllLikedRecipes();
-  let likedRecipeView = new LikedRecipesView(allLikedRecipes);
   state = {
     recipes: {},
     recipe: {},
@@ -16,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
     currentPage: 1,
     numPages: 1,
     likedRecipes: {
-      model: LikedRecipesModel,
-      view: likedRecipeView
+      model: null,
+      view: null
     },
     shoppingList: {
       model: {},

@@ -40,6 +40,7 @@ export class LikedRecipes {
       this.recipes = [recipe]
     }
     let markup = getRecipeMarkup(recipe);
+    if (this.recipes.length === 1) domLikesList.innerHTML = '';
     domLikesList.insertAdjacentHTML('beforeend', markup);
 
   }

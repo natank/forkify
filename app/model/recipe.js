@@ -1,9 +1,4 @@
 import {
-  reject,
-  promised
-} from 'q';
-
-import {
   LikedRecipes
 } from './LikedRecipes';
 

@@ -44,7 +44,7 @@ function fetchData(URL) {
     })
 }
 /* develblock:start */
-function fetchData1(URL) {
+function fetchDataDebug(URL) {
   let id = URL.split('=')[1];
   let newRecipe = {
     data: {
@@ -77,7 +77,7 @@ function fetchData1(URL) {
   };
   let p = new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(newRecipe);
+      resolve(newRecipe.data);
     }, 300);
   });
   return p;

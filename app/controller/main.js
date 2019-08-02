@@ -167,7 +167,8 @@ function controlRecipe() {
 }
 
 function controlRecipeIngredients() {
-  recipeUI.updateIngredients(state.recipe.getData);
+  let recipe = state.recipe.getData();
+  recipeUI.updateIngredients(recipe.ingredients, recipe.servings);
   attachRecipeEventListeners();
 }
 

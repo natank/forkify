@@ -28,9 +28,9 @@ export function render() {
   renderDirections();
 }
 
-export function updateIngredients(ingredients = recipe.ingredients, servings = recipe.servings) {
+export function updateIngredients(ingredients, servings) {
   recipe.ingredients = recipe.ingredients;
-  recipe.servings = recipe.servings;
+  recipe.servings = servings;
   renderDetails();
   renderIngredients();
 }

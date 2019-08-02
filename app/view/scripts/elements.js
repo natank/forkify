@@ -1,4 +1,6 @@
-var domElements = {};
+var domElements = {
+  test: "blabla"
+};
 document.addEventListener('DOMContentLoaded', function () {
   domElements = {
     search: document.querySelector('.search'),

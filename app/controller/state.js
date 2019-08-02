@@ -10,12 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
   state = {
     recipes: {},
     recipe: {},
-    recipeView: {},
+    /*recipeView: {},*/
     currentPage: 1,
     numPages: 1,
     likedRecipes: {
       model: null,
-      view: null
     },
     shoppingList: {
       model: {},

@@ -2,7 +2,7 @@ const DOMSearchField = document.querySelector('.search__field');
 const DOMSearch = document.querySelector('.search');
 import ResultsRenderer from './resultsRenderer';
 
-export default class Search {
+export class Search {
   constructor(getRecipiesCb, getRecipeCb) {
     this.onSearch = this.onSearch.bind(this);
     this.getRecipies = getRecipiesCb;

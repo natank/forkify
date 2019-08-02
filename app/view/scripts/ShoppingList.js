@@ -1,6 +1,4 @@
-import {
-    domElements
-} from './elements';
+import {domElements} from './elements';
 
 import {
     steps

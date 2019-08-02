@@ -1,57 +1,44 @@
-export class ShoppingList {
-  constructor() {
-    this.readIngredients();
-  }
-  setIngredients(ingredients) {
-    ingredients.forEach((ingredient) => {
-      this.updateIngredient(ingredient);
-    })
-    this.saveIngredients();
-  }
-  getIngredients() {
-    return this.ingredients;
-  }
-  deleteIngredient(name) {
-    this.ingredients = this.ingredients.filter((ingredient) => !ingredient.ingredient.startsWith(name));
-    this.saveIngredients();
-  }
+let shoppingList = [];
 
-  // updateIngredient - update the model of a single ingredient
-  // Note-without saving the model in the local storage(!)
-  updateIngredient(ingredient) {
-    let exsistingIngredient = false;
-    this.ingredients = this.ingredients.map((elem) => {
-      if (elem.ingredient === ingredient.ingredient) {
-        exsistingIngredient = true;
-        elem.count += ingredient.count;
-      }
-      return elem;
-    })
-    if (!exsistingIngredient) this.ingredients.push(ingredient);
-  }
+export function setIngredients(ingredients) {
+  ingredients.forEach((ingredient) => {
+    updateIngredient(ingredient);
+  })
+  saveIngredients();
+  return [...shoppingList];
+}
+export function getIngredients() {
+  return [...shoppingList];
+}
+export function deleteIngredient(name) {
+  shoppingList = shoppingList.filter((ingredient) => !ingredient.ingredient.startsWith(name));
+  saveIngredients();
+  return [...shoppingList]
+}
 
-  saveIngredients() {
-    let ingredients = JSON.stringify(this.ingredients);
-    localStorage.setItem('shoppingList', ingredients);
-  }
+// updateIngredient - update the model of a single ingredient
+// Note-without saving the model in the local storage(!)
+export function updateIngredient(ingredient) {
+  let currIngredient = shoppingList.find(elem => elem.ingredient === ingredient.ingredient);
+  if (currIngredient) currIngredient.count = ingredient.count;
+  else shoppingList.push(ingredient);
+  saveIngredients();
+  return [...shoppingList];
+}
 
-  readIngredients() {
-    this.ingredients = JSON.parse(localStorage.getItem('shoppingList'));
-    if (this.ingredients === null) this.ingredients = [];
-  }
-  updateCount(ingredient, newCount) {
-    for (let i = 0; i < this.ingredients.length; i++) {
-      if (this.ingredients[i].ingredient === ingredient) {
-        this.ingredients[i].count = newCount;
-        this.saveIngredients();
-        break;
-      }
-    }
-  }
+export function saveIngredients() {
+  let data = JSON.stringify(shoppingList);
+  localStorage.setItem('shoppingList', data);
+}
 
-  clear() {
-    this.ingredients = [];
-    this.saveIngredients();
-  }
+export function readIngredients() {
+  shoppingList = JSON.parse(localStorage.getItem('shoppingList'));
+  if (shoppingList === null) shoppingList = [];
+  return [...shoppingList];
+}
 
+export function clear() {
+  shoppingList.length = 0;
+  saveIngredients();
+  return [...shoppingList];
 }

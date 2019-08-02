@@ -2,32 +2,44 @@ import helpers from '../../helpers';
 import {
   domElements
 } from './elements';
-export class RecipeView {
-  constructor(props) {
-    this.props = props;
-  }
 
-  render() {
-    domElements.recipe.innerHTML = '';
-    renderFigure.bind(this)();
-    renderDetails.bind(this)();
-    renderIngredients.bind(this)();
-    renderDirections.bind(this)();
+let recipe = {
+  ingredients: null,
+  servings: 4,
+  title: "Spagetti Bolonez",
+  publisher: "The great Chef",
+  source_url: "https://google.com",
+  isLove: true,
+  image_url: "https://google.com",
+  time: 24
+}
 
-  }
-
-  updateIngredients(data) {
-    this.props.ingredients = data.recipe.ingredients;
-    this.props.servings = data.recipe.servings;
-    renderDetails.bind(this)();
-    renderIngredients.bind(this)();
-  }
-
-  updateLove(isLove) {
-    this.props.isLove = isLove;
-    updateLoveButton(isLove);
+export function init(currRecipe) {
+  recipe = {
+    ...currRecipe
   }
 }
+
+export function render() {
+  domElements.recipe.innerHTML = '';
+  renderFigure();
+  renderDetails();
+  renderIngredients();
+  renderDirections();
+}
+
+export function updateIngredients(ingredients = recipe.ingredients, servings = recipe.servings) {
+  recipe.ingredients = recipe.ingredients;
+  recipe.servings = recipe.servings;
+  renderDetails();
+  renderIngredients();
+}
+
+export function updateLove(isLove = true) {
+  recipe.isLove = isLove;
+  updateLoveButton(isLove);
+}
+
 
 function updateLoveButton(isLove) {
   let domLove = domElements.getRecipeLove();
@@ -40,27 +52,24 @@ function updateLoveButton(isLove) {
 
 function renderFigure() {
   domElements.recipe.innerHTML += `<figure class="recipe__fig"><img src=${
-    this.props.image_url
+    recipe.image_url
   } alt="this.props.title"/>
-  <h1 class="recipe__title"><span>${this.props.title}</span></h1>
+  <h1 class="recipe__title"><span>${recipe.title}</span></h1>
 </figure>`;
 }
-
-
-
 
 function renderDetails() {
   let markup = `<div class="recipe__details">
   <div class="recipe__info">
     <svg class="recipe__info-icon">
       <use xlink:href="./images/spritemap.svg#sprite-stopwatch"></use>
-    </svg><span class="recipe__info-data recipe__info-data--minutes">${this.props.time}</span><span class="recipe__info-text"> minutes</span>
+    </svg><span class="recipe__info-data recipe__info-data--minutes">${recipe.time}</span><span class="recipe__info-text"> minutes</span>
   </div>
   <div class="recipe__info">
     <svg class="recipe__info-icon">
       <use xlink:href="./images/spritemap.svg#sprite-man"></use>
     </svg><span class="recipe__info-data recipe__info-data--people">${
-      this.props.servings
+      recipe.servings
     }</span><span class="recipe__info-text"> servings</span>
     <div class="recipe__info-buttons">
       <button class="btn-tiny">
@@ -89,12 +98,12 @@ function renderDetails() {
     domElements.recipe.innerHTML += markup;
   }
 
-  updateLoveButton(this.props.isLove);
+  updateLoveButton(recipe.isLove);
 }
 
 function renderIngredients() {
   let space = '\u00A0';
-  let ingredientsHTML = this.props.ingredients.reduce((markup, ingredient) => {
+  let ingredientsHTML = recipe.ingredients.reduce((markup, ingredient) => {
     return (
       markup +
       `<li class="recipe__item">
@@ -131,9 +140,9 @@ function renderDirections() {
 <h2 class="heading-2">How to cook it</h2>
 <p class="recipe__directions-text">This recipe was carefully designed and tested by<span class="recipe__by">
   ${
-    this.props.publisher
+    recipe.publisher
   }</span>. Please check out directions at their website.</p><a class="btn-small recipe__btn" href=${
-    this.props.source_url
+    recipe.source_url
   } target="_blank"><span>Directions</span>
   <svg class="search__icon">
     <use xlink:href="./images/spritemap.svg#sprite-triangle-right"></use>

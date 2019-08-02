@@ -3,116 +3,41 @@ import {
 } from './LikedRecipes';
 
 import {
-  unitsLong,
-  unitsShort
-} from './units';
+  fetchRecipe
+} from './fetchRecipe';
 
+export class Recipe {
 
-export class RecipeModel {
-  constructor() {}
-
-  getRecipe(id) {
-    let URL = `${location.origin}/recipe?recipeId=${id}`;
-    let that = this;
-    return fetch(URL)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (recipe) {
-        that.data = recipe;
-        let ingredients = parseIngredients(that.data.recipe.ingredients);
-        let servings = 4; // the default servings
-        let time = that.getTime();
-        // find if the recipe is loved
-
-        let isLove = LikedRecipes.isLiked(id);
-
-        let obj = {
-          ingredients: ingredients,
-          servings: servings,
-          id: that.data.recipe.recipe_id,
-          isLove: isLove,
-          time: time
-        };
-
-        that.data.recipe = {
-          ...that.data.recipe,
-          ...obj
-        };
-      })
-      .catch(function (error) {
-        alert(`Unable to get recipe: ${error.message}`);
-      });
+  constructor(id) {
+    this.id = id;
   }
 
-  /* develblock:start */
-  getRecipe1(id) {
-    this.data = {
-
-      recipe: {
-        publisher: "The Pioneer Woman",
-        f2f_url: "http://food2fork.com/view/47154",
-        ingredients: ["1 whole Pizza Crust", "Olive Oil, For Drizzling", "1 whole Large Red Onion, Halved And Thinly Sliced", "1/4 cup Brown Sugar", "Kosher Salt To Taste", "Parmesan Cheese, Grated", "10 ounces, weight Fresh Mozzarella Cheese, Thinly Sliced", "8 slices Prosciutto (more To Taste)", "1 teaspoon Instant Or Active Dry Yeast", "1-1/2 cup Warm Water", "4 cups All-purpose Flour", "1 teaspoon Kosher Salt", "1/3 cup Olive Oil"],
-        source_url: "http://thepioneerwoman.com/cooking/2010/03/caramelized-onion-prosciutto-pizza/",
-        recipe_id: id,
-        image_url: "http://static.food2fork.com/4440156362_bd748d2c2183ef.jpg",
-        social_rank: 99.99970993161892,
-        publisher_url: "http://thepioneerwoman.com",
-        title: "Caramelized Onion &amp; Prosciutto Pizza"
-      }
-
-    }
-    let ingredients = parseIngredients(this.data.recipe.ingredients);
-    let servings = 4; // the default servings
-    let time = this.getTime();
-    // find if the recipe is loved
-
-    let isLove = LikedRecipes.isLiked(id);
-
-
-    let obj = {
-      ingredients: ingredients,
-      servings: servings,
-      recipe_id: this.data.recipe.recipe_id,
-      isLove: isLove,
-      time: time
-    };
-
-    this.data.recipe = {
-      ...this.data.recipe,
-      ...obj
-    };
-
-    let p = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-    return p;
+  fetchData() {
+    return this.fetchRecipe(this.id)
+      .then(recipe => this.recipe = recipe);
   }
-  /* develblock:end */
-  getTime() {
-    let numIngredients = this.data.recipe.ingredients.length;
-    let time = numIngredients * 4;
-    return time;
+
+
+  getData() {
+    return this.recipe;
   }
 
   // Fun
   updateServings(isAdd) {
-    var currServings = this.data.recipe.servings;
+    var currServings = this.recipe.servings;
     let newServings = currServings;
     if (isAdd && currServings < 12) newServings = currServings + 2;
     else if (!isAdd && currServings > 2) newServings = currServings - 2;
-    this.data.recipe.ingredients.map(objIng => {
+    this.recipe.ingredients.map(objIng => {
       objIng.count = (objIng.count * newServings) / currServings;
       return objIng;
     });
 
-    this.data.recipe.servings = newServings;
-    return this.data.recipe;
+    this.recipe.servings = newServings;
+    return this.recipe;
   }
   toggleLove() {
-    let recipe = this.data.recipe;
+    let recipe = this.recipe;
     let id = recipe.recipe_id;
     let isLove = recipe.isLove;
 
@@ -121,7 +46,7 @@ export class RecipeModel {
     // 2- Recipe is unliked - like it - add the id to LikedRecipes
     else LikedRecipes.addRecipe(recipe);
 
-    this.data.recipe.isLove = LikedRecipes.isLiked(id);
+    this.recipe.isLove = LikedRecipes.isLiked(id);
     let p = new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
@@ -131,76 +56,15 @@ export class RecipeModel {
   }
 
   getIngredients() {
-    let ingredients = this.data.recipe.ingredients;
+    let ingredients = this.recipe.ingredients;
     return ingredients;
+  }
+
+  getTime() {
+    let numIngredients = this.recipe.ingredients.length;
+    let time = numIngredients * 4;
+    return time;
   }
 }
 
-function parseIngredients(ingredients) {
-  /*
-  Example strings
-    1 teaspoon parsley
-    1 teaspoon salt
-    1/2 cup Manchengo sheep milk cheese (or Mozzarella)
-    2 eggs
-    cornmeal, to dust the pizza stone
-  */
-  // loop over ingredients.
-
-  let newIngredients = ingredients.map(function (theText) {
-    // Uniform units
-    let ingredient = theText.toLowerCase();
-    unitsLong.forEach((unit, i) => {
-      ingredient = ingredient.replace(unit, unitsShort[i]);
-    });
-    // 2 Remove parantheses
-    ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
-
-    ingredient = ingredient.slice(0, 35); //Limit ingredient length to 15 chars
-    // 3) Parse ingredients into count, unit and ingredient
-    const arrIng = ingredient.split(' ');
-    const unitIndex = arrIng.findIndex(el2 => unitsShort.includes(el2));
-
-    let objIng;
-    if (unitIndex > -1) {
-      // There is a unit
-      const arrCount = arrIng.slice(0, unitIndex);
-      let count;
-      try {
-        if (arrCount.length === 1) {
-
-          count = eval(arrIng[0].replace('-', '+'));
-
-        } else {
-          count = eval(arrIng.slice(0, unitIndex).join('+'));
-        }
-      } catch (err) {
-        count = 1;
-      }
-      var roundedCount = Math.floor(count) + (Math.round((count - Math.floor(count))) ? 0.5 : 0.0);
-      // If count is 0 - fix rounding to 0.25
-      count = roundedCount ? roundedCount : .25;
-      objIng = {
-        count: count,
-        unit: arrIng[unitIndex],
-        ingredient: arrIng.slice(unitIndex + 1).join(' ')
-      };
-    } else if (parseInt(arrIng[0], 10)) {
-      // There is NO unit, but 1st element is a number
-      objIng = {
-        count: parseInt(arrIng[0]),
-        unit: '',
-        ingredient: arrIng.slice(1).join(' ')
-      };
-    } else if (unitIndex === -1) {
-      // There is NO unit and NO number in 1st position
-      objIng = {
-        count: 1,
-        unit: '',
-        ingredient: ingredient
-      };
-    }
-    return objIng;
-  });
-  return newIngredients;
-}
+Recipe.prototype.fetchRecipe = fetchRecipe;

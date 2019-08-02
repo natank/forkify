@@ -2,7 +2,7 @@
 import recipeTemplate from '../templates/recipeTemplate.pug'
 
 
-export default class RecipeTemplate {
+export class RecipeTemplate {
     constructor(details, ingredients) {
         this.node = document.createElement('div');
         this.node.innerHTML = recipeTemplate();

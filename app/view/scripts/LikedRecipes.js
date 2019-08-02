@@ -1,11 +1,48 @@
+// IMPORTS
 import {
   domElements
 } from './elements';
+
+// CODE
+let likedRecipes = [];
 
 var domLikesList;
 document.addEventListener('DOMContentLoaded', function () {
   domLikesList = domElements.getLikesList();
 });
+
+
+
+export function init(recipes) {
+  likedRecipes = [...recipes];
+  render();
+}
+
+export function add(recipe) {
+  // add the recipe to the list
+  likedRecipes.push(recipe);
+  let markup = getRecipeMarkup(recipe);
+  // update the UI
+  if (likedRecipes.length === 1) domLikesList.innerHTML = '';
+  domLikesList.insertAdjacentHTML('beforeend', markup);
+}
+export function remove(id) {
+  likedRecipes = likedRecipes.filter(recipe => id != recipe.recipe_id);
+  render();
+}
+export function render() {
+  // Clean current markup
+  domLikesList.innerHTML = '';
+  if (likedRecipes.length > 0) {
+    let markup = likedRecipes.forEach((recipe) => {
+      let markup = getRecipeMarkup(recipe);
+      domLikesList.insertAdjacentHTML('beforeend', markup);
+    });
+  } else {
+    domLikesList.innerHTML = `<li><h2>You dont have any liked recipes yet...</h2></li>`;
+  }
+}
+
 
 let getRecipeMarkup = (recipe) => `<li><a class="likes__link" href="#${recipe.recipe_id}">
 <figure class="likes__fig"><img src="${recipe.image_url}" alt="Test"/></figure>
@@ -13,52 +50,3 @@ let getRecipeMarkup = (recipe) => `<li><a class="likes__link" href="#${recipe.re
   <h4 class="likes__name">${recipe.title}</h4>
   <p class="likes__author">${recipe.publisher}</p>
 </div></a></li>`
-
-
-export class LikedRecipes {
-  constructor(recipes) {
-    this.recipes = recipes;
-    this.render();
-  }
-
-  add(recipe) {
-    let {
-      publisher,
-      recipe_id,
-      image_url,
-      title
-    } = recipe;
-    recipe = {
-      publisher,
-      recipe_id,
-      image_url,
-      title
-    };
-    if (Array.isArray(this.recipes)) {
-      this.recipes.push(recipe);
-    } else {
-      this.recipes = [recipe]
-    }
-    let markup = getRecipeMarkup(recipe);
-    if (this.recipes.length === 1) domLikesList.innerHTML = '';
-    domLikesList.insertAdjacentHTML('beforeend', markup);
-
-  }
-  remove(id) {
-    if (Array.isArray(this.recipes)) {
-      this.recipes = this.recipes.filter(recipe => id != recipe.recipe_id);
-    }
-    this.render();
-  }
-  render() {
-    domLikesList.innerHTML = '';
-    if (this.recipes.length > 0) {
-      let markup = this.recipes.forEach((recipe) => {
-        let markup = getRecipeMarkup(recipe);
-        domLikesList.insertAdjacentHTML('beforeend', markup);
-      });
-    } else {
-      domLikesList.innerHTML = `<li><h2>You dont have any liked recipes yet...</h2></li>`;
-    }
-  }
-}

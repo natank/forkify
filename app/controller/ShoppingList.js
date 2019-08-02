@@ -1,19 +1,16 @@
 import {
-  recipe
-} from '../model/recipe';
-import {
   ShoppingList as ShoppingListView
 } from '../view/scripts/ShoppingList';
-import {
-  ShoppingList as ShoppingListModel
-} from '../model/ShoppingList.js';
+
+import * as shoppingList from '../model/ShoppingList.js';
+
 import {
   state
 } from './state';
 
 export function initShoppingList() {
-  state.shoppingList.model = new ShoppingListModel();
-  let ingredients = state.shoppingList.model.ingredients;
+  state.shoppingList.model = shoppingList.getIngredients();
+  let ingredients = shoppingList.readIngredients();
   state.shoppingList.view = new ShoppingListView(ingredients);
 }
 
@@ -21,17 +18,20 @@ export function onAddToShopping(event) {
   // 1 get recipe ingredients from recipe model
   let ingredients = state.recipe.getIngredients();
   // 2 update recipe ingredients in the shoppingList model
-  state.shoppingList.model.setIngredients(ingredients);
-  // 3 get shopping list ingredients from shoppingList model
-  ingredients = state.shoppingList.model.getIngredients();
-  // 4 update recipe ingredients in the shopping list view.
+  state.shoppingList.model = shoppingList.setIngredients(ingredients);
+  // 3 update recipe ingredients in the shopping list view.
+  ingredients = state.shoppingList.model;
   state.shoppingList.view.setIngredients(ingredients);
 }
 
 export function onCountChanged(event) {
-  let count = event.target.value;
+  let count = Number(event.target.value);
   let ingredient = event.target.closest('.shopping__item').querySelector('.shopping__description').innerText;
-  state.shoppingList.model.updateCount(ingredient, count);
+  let updatedIngredient = {
+    ingredient: ingredient,
+    count: count
+  }
+  state.shoppingList.model = shoppingList.updateIngredient(updatedIngredient);
 }
 
 export function onIngredientDelete(event) {
@@ -43,11 +43,11 @@ export function onIngredientDelete(event) {
   }
   if (ingredient) {
     state.shoppingList.view.deleteIngredient(ingredient);
-    state.shoppingList.model.deleteIngredient(ingredient);
+    state.shoppingList.model = shoppingList.deleteIngredient(ingredient);
   }
 }
 
 export function onClearShopping() {
-  state.shoppingList.model.clear();
+  state.shoppingList.model = shoppingList.clear();
   state.shoppingList.view.clear();
 }
